@@ -40,6 +40,15 @@ This PowerShell script automates various system management tasks, making it easi
 - **RPassword**: Makes a random password (Integer to adjust length)
 - **CheatSheet**: Display a list of common commands.
 
+### Git Function
+- **GS**: Shortcut for 'git status'.
+- **GA** - Shortcut for 'git add .'.
+- **GC** <message> - Shortcut for 'git commit -m'.
+- **GP** - Shortcut for 'git push'.
+- **G** - Changes to the GitHub directory.
+- **GCom** <message> - Adds all changes and commits with the specified message.
+- **LazyG** <message> - Adds all changes, commits with the specified message, and pushes to the remote repository.
+
 ### Installation Function
 Use the following function to easily install everything needed for the script. The default font in the terminal must be manually set to "Cascadia Cove NF."
 
