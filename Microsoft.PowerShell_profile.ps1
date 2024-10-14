@@ -380,6 +380,7 @@ function gcom {
     git add .
     git commit -m "$args"
 }
+
 function lazyg {
     git add .
     git commit -m "$args"
