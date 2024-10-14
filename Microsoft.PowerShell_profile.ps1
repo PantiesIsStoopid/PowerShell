@@ -98,7 +98,9 @@ if ($terminalType -ne "Visual Studio Code Terminal") {
 }
 
 #* Alias
-function touch($file) { "" | Out-File $file -Encoding ASCII }
+function touch($file) {
+  "" | Out-File $file -Encoding ASCII 
+}
 
 # Set directory to Documents
 function Docs {
