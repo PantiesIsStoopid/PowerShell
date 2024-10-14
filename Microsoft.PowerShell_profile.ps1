@@ -320,6 +320,30 @@ function Shutdown {
   }
 }
 
+#* RandomPassword
+function RPassword {
+param (
+[Parameter(Mandatory)]
+[int] $length
+)
+
+#$charSet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789{]+-[*=@:)}$^%;(_!&amp;#?>/|.'.ToCharArray()
+$charSet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.ToCharArray()
+
+$rng = New-Object System.Security.Cryptography.RNGCryptoServiceProvider
+$bytes = New-Object byte[]($length)
+
+$rng.GetBytes($bytes)
+
+$result = New-Object char[]($length)
+
+for ($i = 0 ; $i -lt $length ; $i++) {
+$result[$i] = $charSet[$bytes[$i]%$charSet.Length]
+}
+
+return (-join $result)
+}
+
 #* RandomFact
 function RandomFact {
   $url = "https://uselessfacts.jsph.pl/random.json?language=en"
@@ -386,7 +410,7 @@ System Information:
 
 #* Help Function
 function ShowHelp {
-  @"
+@"
 PowerShell Profile Help
 =======================
 
@@ -421,6 +445,7 @@ Utility Functions:
 - ReinstallWinget: Uninstalls Winget and reinstalls it.
 - CalcPi: Calculates pi to 100 digits.
 - Shutdown: Shutdown PC (-Force to force shutdown).
+- RPassword: Makes a random password (Integer to adjust length)
 - RandomFact: Prints a random fun fact.
 
 - CheatSheet: Displays a list of all the most common commands.
