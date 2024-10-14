@@ -37,6 +37,7 @@ This PowerShell script automates various system management tasks, making it easi
 - **CalcPi**: Calculate pi to 100 digits.
 - **Shutdown**: Shutdown the PC (-Force to force shutdown).
 - **RandomFact**: Print a random fun fact.
+- **RPassword**: Makes a random password (Integer to adjust length)
 - **CheatSheet**: Display a list of common commands.
 
 ### Installation Function
