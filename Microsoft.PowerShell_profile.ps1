@@ -74,7 +74,7 @@ Clear-Host
 #* Function to identify the terminal
 function TerminalType {
   switch ($env:TERM_PROGRAM) {
-    "vscode" { return "Visual Studio Code Terminal" }
+    "vscode" { return "VS Code Terminal" }
     "Apple_Terminal" { return "Apple Terminal" }
     "iTerm.app" { return "iTerm" }
     { $env:ConEmuANSI } { return "ConEmu" }
@@ -93,7 +93,7 @@ if (-not ($PSCmdlet.MyInvocation.PSCommandPath -match 'oh-my-posh')) {
 }
 
 #* Run neofetch if not in Visual Studio Code Terminal
-if ($terminalType -ne "Visual Studio Code Terminal") {
+if ($terminalType -ne "VS Code Terminal") {
   fastfetch -c neofetch.jsonc
 }
 
