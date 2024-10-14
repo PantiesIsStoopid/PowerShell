@@ -98,23 +98,7 @@ if ($terminalType -ne "Visual Studio Code Terminal") {
 }
 
 #* Alias
-function Touch {
-  param (
-    [string]$FileName
-  )
-
-  # Get the full path to the file (use current directory if only a file name is provided)
-  $FullPath = Join-Path -Path (Get-Location) -ChildPath $FileName
-
-  # If the file exists, update the last modified timestamp
-  if (Test-Path -Path $FullPath) {
-    (Get-Item $FullPath).LastWriteTime = Get-Date
-  }
-  # If the file doesn't exist, create an empty file in the current directory
-  else {
-    New-Item -Path $FullPath -ItemType File | Out-Null
-  }
-}
+function touch($file) { "" | Out-File $file -Encoding ASCII }
 
 # Set directory to Documents
 function Docs {
