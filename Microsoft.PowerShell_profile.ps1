@@ -364,24 +364,24 @@ function ClearCache {
 }
 
 # Git Shortcuts
-function gs { git status }
+function GS { git status }
 
-function ga { git add . }
+function GA { git add . }
 
-function gc { param($m) git commit -m "$m" }
+function GC { param($m) git commit -m "$m" }
 
-function gp { git push }
+function GP { git push }
 
-function g { __zoxide_z github }
+function G { __zoxide_z github }
 
-function gcl { git clone "$args" }
+function GCL { git clone "$args" }
 
-function gcom {
+function GCom {
     git add .
     git commit -m "$args"
 }
 
-function lazyg {
+function LazyG {
     git add .
     git commit -m "$args"
     git push
