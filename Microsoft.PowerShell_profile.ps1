@@ -377,6 +377,29 @@ function ClearCache {
   Write-Host "Microsoft Edge cache cleared." -ForegroundColor Green
 }
 
+# Git Shortcuts
+function gs { git status }
+
+function ga { git add . }
+
+function gc { param($m) git commit -m "$m" }
+
+function gp { git push }
+
+function g { __zoxide_z github }
+
+function gcl { git clone "$args" }
+
+function gcom {
+    git add .
+    git commit -m "$args"
+}
+function lazyg {
+    git add .
+    git commit -m "$args"
+    git push
+}
+
 function CheatSheet {
   @"
 PowerShell Cheatsheet
@@ -445,8 +468,17 @@ Utility Functions:
 - ReinstallWinget: Uninstalls Winget and reinstalls it.
 - CalcPi: Calculates pi to 100 digits.
 - Shutdown: Shutdown PC (-Force to force shutdown).
-- RPassword: Makes a random password (Integer to adjust length)
+- RPassword <Length>: Makes a random password.
 - RandomFact: Prints a random fun fact.
+
+Git Function:
+- GS: Shortcut for 'git status'.
+- GA - Shortcut for 'git add .'.
+- GC <message> - Shortcut for 'git commit -m'.
+- GP - Shortcut for 'git push'.
+- G - Changes to the GitHub directory.
+- GCom <message> - Adds all changes and commits with the specified message.
+- LazyG <message> - Adds all changes, commits with the specified message, and pushes to the remote repository.
 
 - CheatSheet: Displays a list of all the most common commands.
 
