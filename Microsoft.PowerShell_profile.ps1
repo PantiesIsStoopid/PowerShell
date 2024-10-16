@@ -67,10 +67,10 @@ if (-not (Get-Module -ListAvailable -Name Terminal-Icons)) {
   Install-Module -Name Terminal-Icons -Scope CurrentUser -Force -SkipPublisherCheck -ErrorAction Stop
 }
 
-# Import the module
+#* Import the module
 Import-Module -Name Terminal-Icons -ErrorAction Stop
 
-# Import Chocolatey profile if it exists
+#* Import Chocolatey profile if it exists
 $ChocolateyProfile = Join-Path -Path $env:ChocolateyInstall -ChildPath "helpers\chocolateyProfile.psm1"
 if (Test-Path -Path $ChocolateyProfile) {
   Import-Module -Name $ChocolateyProfile -ErrorAction Stop
