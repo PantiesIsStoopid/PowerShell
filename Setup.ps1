@@ -19,8 +19,8 @@ function Test-InternetConnection {
 # Function to install Nerd Fonts
 function Install-NerdFonts {
     param (
-        [string]$FontName = "CascadiaCode",
-        [string]$FontDisplayName = "CaskaydiaCove NF",
+        [string]$FontName = "FiraCode",
+        [string]$FontDisplayName = "Fira Code NF",
         [string]$Version = "3.2.1"
     )
 
@@ -33,22 +33,24 @@ function Install-NerdFonts {
             $extractPath = "$env:TEMP\${FontName}"
 
             $webClient = New-Object System.Net.WebClient
-            $webClient.DownloadFileAsync((New-Object System.Uri($fontZipUrl)), $zipFilePath)
+            Write-Host "Downloading font ${FontDisplayName}..."
+            $webClient.DownloadFile((New-Object System.Uri($fontZipUrl)), $zipFilePath)
 
-            while ($webClient.IsBusy) {
-                Start-Sleep -Seconds 2
-            }
-
-            Expand-Archive -Path $zipFilePath -DestinationPath $extractPath -Force
-            $destination = (New-Object -ComObject Shell.Application).Namespace(0x14)
-            Get-ChildItem -Path $extractPath -Recurse -Filter "*.ttf" | ForEach-Object {
-                If (-not(Test-Path "C:\Windows\Fonts\$($_.Name)")) {
-                    $destination.CopyHere($_.FullName, 0x10)
+            if (Test-Path $zipFilePath) {
+                Expand-Archive -Path $zipFilePath -DestinationPath $extractPath -Force
+                $destination = (New-Object -ComObject Shell.Application).Namespace(0x14)
+                Get-ChildItem -Path $extractPath -Recurse -Filter "*.ttf" | ForEach-Object {
+                    If (-not(Test-Path "C:\Windows\Fonts\$($_.Name)")) {
+                        $destination.CopyHere($_.FullName, 0x10)
+                    }
                 }
-            }
 
-            Remove-Item -Path $extractPath -Recurse -Force
-            Remove-Item -Path $zipFilePath -Force
+                Remove-Item -Path $extractPath -Recurse -Force
+                Remove-Item -Path $zipFilePath -Force
+                Write-Host "Font ${FontDisplayName} installed successfully"
+            } else {
+                Write-Error "Failed to download ${FontDisplayName} font."
+            }
         } else {
             Write-Host "Font ${FontDisplayName} already installed"
         }
@@ -57,6 +59,7 @@ function Install-NerdFonts {
         Write-Error "Failed to download or install ${FontDisplayName} font. Error: $_"
     }
 }
+
 
 # Check for internet connectivity before proceeding
 if (-not (Test-InternetConnection)) {
