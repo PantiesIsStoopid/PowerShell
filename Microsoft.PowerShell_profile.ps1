@@ -6,6 +6,9 @@ if ([bool]([System.Security.Principal.WindowsIdentity]::GetCurrent()).IsSystem) 
 # Initial GitHub.com connectivity check with 1 second timeout
 $canConnectToGitHub = Test-Connection github.com -Count 1 -Quiet -TimeoutSeconds 1
 
+#Initliaize zoxide
+Invoke-Expression (& { (zoxide init powershell | Out-String) })
+
 # Check for Profile Updates
 function Update-Profile {
     if (-not $global:canConnectToGitHub) {
@@ -83,10 +86,6 @@ Clear-Host
 function TerminalType {
   switch ($env:TERM_PROGRAM) {
     "vscode" { return "VS Code Terminal" }
-    "Apple_Terminal" { return "Apple Terminal" }
-    "iTerm.app" { return "iTerm" }
-    { $env:ConEmuANSI } { return "ConEmu" }
-    "Hyper" { return "Hyper" }
     default { return $Host.Name -eq "ConsoleHost" ? "Windows PowerShell" : "Unknown Terminal" }
   }
 }
@@ -175,6 +174,8 @@ function Speedtest {
   Invoke-RestMethod asheroto.com/speedtest | Invoke-Expression
   Write-Host "Pinging 1.1.1.1" -ForegroundColor Cyan
   ping 1.1.1.1
+  Write-Host "Pinging 8.8.8.8" -ForegroundColor Cyan
+  ping 8.8.8.8
 }
 
 #* Open current directory in File Explorer
