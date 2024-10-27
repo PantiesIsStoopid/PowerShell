@@ -147,3 +147,11 @@ try {
 catch {
     Write-Error "Failed to install fastfetch. Error: $_"
 }
+try {
+    winget install sxyazi.yazi
+    # Install the optional dependencies (recommended):
+    winget install 7zip.7zip jqlang.jq sharkdp.fd BurntSushi.ripgrep.MSVC junegunn.fzf ajeetdsouza.zoxide ImageMagick.ImageMagick
+}
+catch {
+    Write-Error "Failed to install yazi. Error: $_"
+}
