@@ -96,7 +96,7 @@ Write-Host "$terminalType" -ForegroundColor Yellow
 
 #* Initialize Oh My Posh config
 if (-not ($PSCmdlet.MyInvocation.PSCommandPath -match 'oh-my-posh')) {
-  oh-my-posh init pwsh --config https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/cobalt2.omp.json | Invoke-Expression
+  oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\cobalt2.omp.json" | Invoke-Expression
 }
 
 #* Run neofetch if not in Visual Studio Code Terminal
