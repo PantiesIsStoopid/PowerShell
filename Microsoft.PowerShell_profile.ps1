@@ -396,7 +396,7 @@ function LazyG {
     git push
 }
 
-function LazyG {
+function LazyInit {
     git init
     git add .
     git commit -m "first commit"
