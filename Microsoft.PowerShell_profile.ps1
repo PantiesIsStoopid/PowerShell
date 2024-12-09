@@ -396,6 +396,16 @@ function LazyG {
     git push
 }
 
+function LazyG {
+    git init
+    git add .
+    git commit -m "first commit"
+    git branch -M master
+    git remote add origin $args
+    git push -u origin master
+}
+
+
 function CheatSheet {
   @"
 PowerShell Cheatsheet
@@ -475,6 +485,7 @@ Git Function:
 - G - Changes to the GitHub directory.
 - GCom <message> - Adds all changes and commits with the specified message.
 - LazyG <message> - Adds all changes, commits with the specified message, and pushes to the remote repository.
+- LazyInit <URL> - Adds all steps for the init of a repo and can add remote url.
 
 - CheatSheet: Displays a list of all the most common commands.
 
