@@ -6,9 +6,6 @@ if ([bool]([System.Security.Principal.WindowsIdentity]::GetCurrent()).IsSystem) 
 # Initial GitHub.com connectivity check with 1 second timeout
 $canConnectToGitHub = Test-Connection github.com -Count 1 -Quiet -TimeoutSeconds 1
 
-#Initliaize zoxide
-Invoke-Expression (& { (zoxide init powershell | Out-String) })
-
 # Check for Profile Updates
 function Update-Profile {
     if (-not $global:canConnectToGitHub) {
@@ -31,7 +28,7 @@ function Update-Profile {
         Remove-Item "$env:temp/Microsoft.PowerShell_profile.ps1" -ErrorAction SilentlyContinue
     }
 }
-Update-Profile
+#Update-Profile
 
 function Update-PowerShell {
     if (-not $global:canConnectToGitHub) {
@@ -63,6 +60,15 @@ function Update-PowerShell {
 }
 Update-PowerShell
 
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+
+#*Initliaize zoxide
+Invoke-Expression (& { (zoxide init powershell | Out-String) })
+
+#* Initialize Oh My Posh config
+if (-not ($PSCmdlet.MyInvocation.PSCommandPath -match 'oh-my-posh')) {
+  oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\cobalt2.omp.json" | Invoke-Expression
+}
 
 #* Import Modules and External Profiles
 #* Ensure Terminal-Icons module is installed before importing
@@ -82,29 +88,18 @@ if (Test-Path -Path $ChocolateyProfile) {
 #* Clear the console
 Clear-Host
 
-#* Function to identify the terminal
-function TerminalType {
-  switch ($env:TERM_PROGRAM) {
-    "vscode" { return "VS Code Terminal" }
-    default { return $Host.Name -eq "ConsoleHost" ? "Windows PowerShell" : "Unknown Terminal" }
-  }
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+
+# Check if running in Visual Studio Code terminal
+if ($env:TERM_PROGRAM -ne "vscode") {
+    # Run Fastfetch if not in Visual Studio Code's terminal
+    fastfetch --config "C:\Users\Nyle\Documents\Powershell\FastConfig.jsonc"
 }
 
-#* Get terminal type and print it
-$terminalType = TerminalType
-Write-Host "$terminalType" -ForegroundColor Yellow
-
-#* Initialize Oh My Posh config
-if (-not ($PSCmdlet.MyInvocation.PSCommandPath -match 'oh-my-posh')) {
-  oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\cobalt2.omp.json" | Invoke-Expression
-}
-
-#* Run neofetch if not in Visual Studio Code Terminal
-if ($terminalType -ne "VS Code Terminal") {
-  fastfetch -c neofetch.jsonc
-}
 
 #* Alias
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+
 function touch($file) {
   "" | Out-File $file -Encoding ASCII 
 }
@@ -396,6 +391,17 @@ function LazyG {
     git push
 }
 
+function LazyInit {
+    git init
+    git add .
+    git commit -m "first commit"
+    git branch -M master
+    git remote add origin $args
+    git push -u origin master
+}
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+
 function CheatSheet {
   @"
 PowerShell Cheatsheet
@@ -475,6 +481,7 @@ Git Function:
 - G - Changes to the GitHub directory.
 - GCom <message> - Adds all changes and commits with the specified message.
 - LazyG <message> - Adds all changes, commits with the specified message, and pushes to the remote repository.
+- LazyInit <URL> - Adds all steps for the init of a repo and can add remote url.
 
 - CheatSheet: Displays a list of all the most common commands.
 

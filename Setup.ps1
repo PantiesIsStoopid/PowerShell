@@ -102,6 +102,19 @@ else {
     }
 }
 
+# FastFetch Config Install
+
+# Download and move FastConfig.jsonc to the same directory as the PowerShell profile
+try {
+  $configUrl = "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/FastConfig.jsonc"
+  $configDest = Join-Path -Path (Split-Path -Path $PROFILE -Parent) -ChildPath "FastConfig.jsonc"
+  Invoke-RestMethod -Uri $configUrl -OutFile $configDest
+  Write-Host "FastConfig.jsonc downloaded to $configDest"
+} catch {
+  Write-Error "Failed to download or move FastConfig.jsonc. Error: $_"
+}
+
+
 # OMP Install
 try {
     winget install -e --accept-source-agreements --accept-package-agreements JanDeDobbeleer.OhMyPosh
