@@ -106,7 +106,7 @@ Write-Host "$terminalType" -ForegroundColor Yellow
 
 #* Run neofetch if not in Visual Studio Code Terminal
 if ($terminalType -ne "VS Code Terminal") {
-  fastfetch -c neofetch.jsonc
+  fastfetch --config FastConfig.jsonc
 }
 
 #* Alias
