@@ -90,24 +90,12 @@ Clear-Host
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
 
-#* Function to identify the terminal
-function TerminalType {
-  switch ($env:TERM_PROGRAM) {
-    "vscode" { return "VS Code Terminal" }
-    default { return $Host.Name -eq "ConsoleHost" ? "Windows PowerShell" : "Unknown Terminal" }
-  }
+# Run Fastfetch only if not in Visual Studio Code Terminal
+if ($Host.Name -notlike "*Visual Studio Code*") {
+  fastfetch --config "C:\Users\Nyle\Documents\Powershell\FastConfig.jsonc"
+
 }
 
-#* Get terminal type and print it
-$terminalType = TerminalType
-Write-Host "$terminalType" -ForegroundColor Yellow
-
-
-
-#* Run neofetch if not in Visual Studio Code Terminal
-if ($terminalType -ne "VS Code Terminal") {
-  fastfetch --config https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/FastConfig.jsonc
-}
 
 #* Alias
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
