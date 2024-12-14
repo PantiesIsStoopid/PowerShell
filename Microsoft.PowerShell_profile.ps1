@@ -90,10 +90,17 @@ Clear-Host
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
 
+<<<<<<< HEAD
 # Check if running in Visual Studio Code terminal
 if ($env:TERM_PROGRAM -ne "vscode") {
     # Run Fastfetch if not in Visual Studio Code's terminal
     fastfetch --config "C:\Users\Nyle\Documents\Powershell\FastConfig.jsonc"
+=======
+# Run Fastfetch only if not in Visual Studio Code Terminal
+if ($Host.Name -notlike "*Visual Studio Code*") {
+  fastfetch --config "C:\Users\Nyle\Documents\Powershell\FastConfig.jsonc"
+
+>>>>>>> 1d3684e89f50d57c92be5c2e6eef9ee08f7d9897
 }
 
 
