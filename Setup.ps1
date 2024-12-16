@@ -16,6 +16,41 @@ function Test-InternetConnection {
     }
 }
 
+# Install PowerShell 7 and Set as Default
+$Pwsh7Path = "C:\Program Files\PowerShell\7\pwsh.exe"
+$ShortcutPath = "$Env:ProgramData\Microsoft\Windows\Start Menu\Programs\PowerShell 7.lnk"
+
+# Check if PowerShell 7 is already installed
+if (-Not (Test-Path $Pwsh7Path)) {
+  Write-Host "Installing PowerShell 7..."
+  Invoke-WebRequest -Uri "https://github.com/PowerShell/PowerShell/releases/latest/download/PowerShell-7.3.7-win-x64.msi" -OutFile "$Env:TEMP\pwsh7.msi"
+  Start-Process -FilePath "msiexec.exe" -ArgumentList "/i `"$Env:TEMP\pwsh7.msi`" /quiet /norestart" -Wait
+  Write-Host "PowerShell 7 installed successfully."
+} else {
+  Write-Host "PowerShell 7 is already installed."
+}
+
+# Check if the shortcut exists
+if (Test-Path $ShortcutPath) {
+  Write-Host "Setting PowerShell 7 as the default terminal..."
+  
+  # Update the default terminal setting
+  $TerminalSettingsPath = "$Env:LOCALAPPDATA\Microsoft\Windows Terminal\settings.json"
+  $Settings = Get-Content -Path $TerminalSettingsPath -Raw | ConvertFrom-Json
+  $Profile = $Settings.profiles.list | Where-Object { $_.name -eq "PowerShell" }
+  if ($Profile -and $Profile.commandline -ne $Pwsh7Path) {
+    $Profile.commandline = $Pwsh7Path
+    $Settings.profiles.list = $Settings.profiles.list | Where-Object { $_.name -ne "PowerShell" } + $Profile
+    $Settings | ConvertTo-Json -Depth 10 | Set-Content -Path $TerminalSettingsPath
+    Write-Host "Default terminal updated to PowerShell 7."
+  } else {
+    Write-Host "Default terminal is already set to PowerShell 7."
+  }
+} else {
+  Write-Host "PowerShell 7 shortcut not found. Install might not have created it."
+}
+
+
 # Function to install Nerd Fonts
 function Install-NerdFonts {
     param (
