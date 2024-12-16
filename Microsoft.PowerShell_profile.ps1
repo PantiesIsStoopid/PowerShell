@@ -28,7 +28,7 @@ function Update-Profile {
         Remove-Item "$env:temp/Microsoft.PowerShell_profile.ps1" -ErrorAction SilentlyContinue
     }
 }
-Update-Profile
+#Update-Profile
 
 function Update-PowerShell {
     if (-not $global:canConnectToGitHub) {
@@ -91,10 +91,10 @@ Clear-Host
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
 
 # Run Fastfetch only if not in Visual Studio Code Terminal
-if ($Host.Name -notlike "*Visual Studio Code*") {
+if ($Env:TERM_PROGRAM -ne "vscode") {
   fastfetch --config "C:\Users\Nyle\Documents\Powershell\FastConfig.jsonc"
-
 }
+
 
 
 #* Alias
