@@ -95,8 +95,6 @@ if ($Env:TERM_PROGRAM -ne "vscode") {
   fastfetch --config "C:\Users\Nyle\Documents\Powershell\FastConfig.jsonc"
 }
 
-
-
 #* Alias
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
 
@@ -368,6 +366,8 @@ function ClearCache {
 }
 
 # Git Shortcuts
+function GL { git log }
+
 function GS { git status }
 
 function GA { git add . }
@@ -381,23 +381,23 @@ function G { __zoxide_z github }
 function GCL { git clone "$args" }
 
 function GCom {
-    git add .
-    git commit -m "$args"
+  git add .
+  git commit -m "$args"
 }
 
 function LazyG {
-    git add .
-    git commit -m "$args"
-    git push
+  git add .
+  git commit -m "$args"
+  git push
 }
 
 function LazyInit {
-    git init
-    git add .
-    git commit -m "first commit"
-    git branch -M master
-    git remote add origin $args
-    git push -u origin master
+  git init
+  git add .
+  git commit -m "first commit"
+  git branch -M master
+  git remote add origin $args
+  git push -u origin master
 }
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#

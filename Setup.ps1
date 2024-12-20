@@ -198,11 +198,19 @@ try {
 catch {
     Write-Error "Failed to install fastfetch. Error: $_"
 }
-try {
-    winget install sxyazi.yazi
-    # Install the optional dependencies (recommended):
-    winget install 7zip.7zip jqlang.jq sharkdp.fd BurntSushi.ripgrep.MSVC junegunn.fzf ajeetdsouza.zoxide ImageMagick.ImageMagick
-}
-catch {
-    Write-Error "Failed to install yazi. Error: $_"
+
+# Ask the user if they want to install Yazi
+$installYazi = Read-Host "Do you want to install Yazi? (Y/N)"
+
+if ($installYazi -eq 'Y' -or $installYazi -eq 'y') {
+    try {
+        # Install Yazi
+        winget install sxyazi.yazi
+        # Install the optional dependencies (recommended)
+        winget install 7zip.7zip jqlang.jq sharkdp.fd BurntSushi.ripgrep.MSVC junegunn.fzf ajeetdsouza.zoxide ImageMagick.ImageMagick
+    } catch {
+        Write-Error "Failed to install Yazi. Error: $_"
+    }
+} else {
+    Write-Host "Installation aborted."
 }
