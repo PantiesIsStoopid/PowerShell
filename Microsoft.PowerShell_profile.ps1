@@ -474,6 +474,7 @@ Utility Functions:
 - RandomFact: Prints a random fun fact.
 
 Git Function:
+- GL: Shortcut for 'git log'.
 - GS: Shortcut for 'git status'.
 - GA - Shortcut for 'git add .'.
 - GC <message> - Shortcut for 'git commit -m'.
