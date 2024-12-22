@@ -149,18 +149,6 @@ try {
   Write-Error "Failed to download or move FastConfig.jsonc. Error: $_"
 }
 
-# Oh my posh Config Install
-
-# Download and move DraculaGit.omp.json to the same directory as the PowerShell profile
-try {
-  $draculaUrl = "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/DraculaGit.omp.json"
-  $draculaDest = Join-Path -Path (Split-Path -Path $PROFILE -Parent) -ChildPath "DraculaGit.omp.json"
-  Invoke-RestMethod -Uri $draculaUrl -OutFile $draculaDest
-  Write-Host "DraculaGit.omp.json downloaded to $draculaDest"
-} catch {
-  Write-Error "Failed to download or move DraculaGit.omp.json. Error: $_"
-}
-
 
 
 
