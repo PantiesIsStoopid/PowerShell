@@ -25,7 +25,7 @@
         },
 
         {
-          "background": "#f8f8f2",
+          "background": "#8FBC8f",
           "foreground": "#f8f8f2",
           "powerline_symbol": "\ue0b0",
           "background_templates": [
