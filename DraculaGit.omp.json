@@ -25,14 +25,14 @@
         },
 
         {
-          "background": "#3AD900",
+          "background": "#1E1F29",
           "background_templates": [
-            "{{ if or (.Working.Changed) (.Staging.Changed) }}#FFC600{{ end }}",
-            "{{ if and (gt .Ahead 0) (gt .Behind 0) }}#FFCC80{{ end }}",
-            "{{ if gt .Ahead 0 }}#B388FF{{ end }}",
-            "{{ if gt .Behind 0 }}#B388FF{{ end }}"
+            "{{ if or (.Working.Changed) (.Staging.Changed) }}#FFB86C{{ end }}",
+            "{{ if and (gt .Ahead 0) (gt .Behind 0) }}#50FA7B{{ end }}",
+            "{{ if gt .Ahead 0 }}#8BE9FD{{ end }}",
+            "{{ if gt .Behind 0 }}#FF5555{{ end }}"
           ],
-          "foreground": "#ffffff",
+          "foreground": "#F8F8F2",
           "properties": {
             "fetch_stash_count": true,
             "fetch_status": true
