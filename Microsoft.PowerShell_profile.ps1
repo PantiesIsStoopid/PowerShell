@@ -96,7 +96,8 @@ Clear-Host
 
 # Run Fastfetch only if not in Visual Studio Code Terminal
 if ($Env:TERM_PROGRAM -ne "vscode") {
-  fastfetch --config "https://github.com/PantiesIsStoopid/PowerShell/raw/refs/heads/main/FastConfig.jsonc"
+  fastfetch --config "$env:USERPROFILE\Documents\PowerShell\FastConfig.jsonc"
+
 }
 
 #* Alias
