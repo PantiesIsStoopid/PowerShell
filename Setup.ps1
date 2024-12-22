@@ -238,3 +238,5 @@ If ($InstallDracula -eq 'Y' -or $InstallDracula -eq 'y') {
 Else {
   Write-Host "Installation aborted."
 }
+
+exit
