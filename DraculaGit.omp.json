@@ -39,7 +39,7 @@
             "{{ if gt .Behind 0 }}#B388FF{{ end }}"
           ],
           "foreground": "#000000",
-          "leading_diamond": "<>\uE0B0</>",
+          "leading_diamond": "\uE0B0",
           "trailing_diamond": "\ue0b4",
           "properties": {
             "fetch_stash_count": true,
