@@ -26,7 +26,7 @@
         {
           "background": "#50FA7B",
           "background_templates": [
-            "{{ if or (.Working.Changed) (.Staging.Changed) }}#F4A300{{ end }}",
+            "{{ if or (.Working.Changed) (.Staging.Changed) }}#FF0000{{ end }}",
             "{{ if and (gt .Ahead 0) (gt .Behind 0) }}#FFB86C{{ end }}",
             "{{ if gt .Ahead 0 }}#BD93F9{{ end }}",
             "{{ if gt .Behind 0 }}#BD93F9{{ end }}"
