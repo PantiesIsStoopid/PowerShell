@@ -67,7 +67,7 @@ Invoke-Expression (& { (zoxide init powershell | Out-String) })
 
 #* Initialize Oh My Posh config
 if (-not ($PSCmdlet.MyInvocation.PSCommandPath -match 'oh-my-posh')) {
-  oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\cobalt2.omp.json" | Invoke-Expression
+  oh-my-posh init pwsh --config "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/refs/heads/main/themes/dracula.omp.json" | Invoke-Expression
 }
 
 #* Import Modules and External Profiles
@@ -90,19 +90,10 @@ Clear-Host
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
 
-<<<<<<< HEAD
-# Check if running in Visual Studio Code terminal
-if ($env:TERM_PROGRAM -ne "vscode") {
-    # Run Fastfetch if not in Visual Studio Code's terminal
-    fastfetch --config "C:\Users\Nyle\Documents\Powershell\FastConfig.jsonc"
-=======
 # Run Fastfetch only if not in Visual Studio Code Terminal
-if ($Host.Name -notlike "*Visual Studio Code*") {
+if ($Env:TERM_PROGRAM -ne "vscode") {
   fastfetch --config "C:\Users\Nyle\Documents\Powershell\FastConfig.jsonc"
-
->>>>>>> 1d3684e89f50d57c92be5c2e6eef9ee08f7d9897
 }
-
 
 #* Alias
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
@@ -375,6 +366,8 @@ function ClearCache {
 }
 
 # Git Shortcuts
+function GL { git log }
+
 function GS { git status }
 
 function GA { git add . }
@@ -388,23 +381,23 @@ function G { __zoxide_z github }
 function GCL { git clone "$args" }
 
 function GCom {
-    git add .
-    git commit -m "$args"
+  git add .
+  git commit -m "$args"
 }
 
 function LazyG {
-    git add .
-    git commit -m "$args"
-    git push
+  git add .
+  git commit -m "$args"
+  git push
 }
 
 function LazyInit {
-    git init
-    git add .
-    git commit -m "first commit"
-    git branch -M master
-    git remote add origin $args
-    git push -u origin master
+  git init
+  git add .
+  git commit -m "first commit"
+  git branch -M master
+  git remote add origin $args
+  git push -u origin master
 }
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
@@ -481,6 +474,7 @@ Utility Functions:
 - RandomFact: Prints a random fun fact.
 
 Git Function:
+- GL: Shortcut for 'git log'.
 - GS: Shortcut for 'git status'.
 - GA - Shortcut for 'git add .'.
 - GC <message> - Shortcut for 'git commit -m'.
