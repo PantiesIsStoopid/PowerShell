@@ -52,17 +52,16 @@
           "template": " \ue718 {{ if .PackageManagerIcon }}{{ .PackageManagerIcon }} {{ end }}{{ .Full }} ",
           "type": "node"
         },
-
         {
           "background": "#ff79c6",
           "foreground": "#f8f8f2",
           "properties": {
-            "style": "diamond"
+            "time_format": "15:04"
           },
           "style": "diamond",
-          "template": " \u2699 {{ .ExecutionTime | printf \"%.2fs\" }} ",
+          "template": " \u2665 {{ .CurrentDate | date .Format }} ",
           "trailing_diamond": "\ue0b0",
-          "type": "execution_time"
+          "type": "time"
         }
       ],
       "type": "prompt"
