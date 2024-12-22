@@ -23,7 +23,6 @@
           "template": " {{ .Path }} ",
           "type": "path"
         },
-
         {
           "background": "#3AD900",
           "background_templates": [
@@ -43,7 +42,6 @@
           "template": " {{ .HEAD }}{{ if .Staging.Changed }}<#FF6F00> \uf046 {{ .Staging.String }}</>{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Working.Changed }} \uf044 {{ .Working.String }}{{ end }}{{ if gt .StashCount 0 }} \ueb4b {{ .StashCount }}{{ end }} ",
           "type": "git"
         },
-
         {
           "background": "#ff79c6",
           "foreground": "#f8f8f2",
