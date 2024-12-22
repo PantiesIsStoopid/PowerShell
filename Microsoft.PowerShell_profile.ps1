@@ -67,7 +67,12 @@ Invoke-Expression (& { (zoxide init powershell | Out-String) })
 
 #* Initialize Oh My Posh config
 if (-not ($PSCmdlet.MyInvocation.PSCommandPath -match 'oh-my-posh')) {
-  oh-my-posh init pwsh --config "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/DraculaGit.omp.json" | Invoke-Expression
+  $themePath = Join-Path -Path (Split-Path -Path $PROFILE -Parent) -ChildPath "DraculaGit.omp.json"
+  if (Test-Path -Path $themePath) {
+    oh-my-posh init pwsh --config $themePath | Invoke-Expression
+  } else {
+    throw "Oh My Posh theme file not found at $themePath"
+  }
 }
 
 #* Import Modules and External Profiles
