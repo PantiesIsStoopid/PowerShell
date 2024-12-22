@@ -67,7 +67,7 @@ Invoke-Expression (& { (zoxide init powershell | Out-String) })
 
 #* Initialize Oh My Posh config
 if (-not ($PSCmdlet.MyInvocation.PSCommandPath -match 'oh-my-posh')) {
-  oh-my-posh init pwsh --config "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/refs/heads/main/themes/dracula.omp.json" | Invoke-Expression
+  oh-my-posh init pwsh --config "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/DraculaGit.omp.json" | Invoke-Expression
 }
 
 #* Import Modules and External Profiles
