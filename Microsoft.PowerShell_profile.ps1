@@ -64,6 +64,60 @@ function Update-PowerShell {
 }
 Update-PowerShell
 
+# Function to check if local file hash matches the remote one
+function Compare-Hashes {
+    param (
+        [string]$localFilePath,
+        [string]$remoteUrl
+    )
+
+    # Get the hash of the local file (if exists)
+    if (Test-Path $localFilePath) {
+        $localFileHash = Get-FileHash -Path $localFilePath -Algorithm SHA256
+    } else {
+        $localFileHash = $null
+    }
+
+    # Download the remote file and get its hash
+    $remoteFile = Invoke-RestMethod -Uri $remoteUrl -Method Get
+    $remoteFileHash = [BitConverter]::ToString((Get-FileHash -InputStream ([System.IO.MemoryStream]::new($remoteFile))).Hash).Replace("-", "").ToLower()
+
+    # Compare the hashes and return the result
+    return $localFileHash.Hash.ToLower() -ne $remoteFileHash
+}
+
+# Function to download the remote file and replace the local one
+function Download-DraculaGitFile {
+    param (
+        [string]$fileUrl,
+        [string]$filePath
+    )
+
+    Write-Host "Downloading DraculaGit.omp.json from $fileUrl..." -ForegroundColor Cyan
+    try {
+        # Download the file and replace the local one
+        Invoke-WebRequest -Uri $fileUrl -OutFile $filePath -Force
+        Write-Host "File downloaded and replaced successfully." -ForegroundColor Green
+    }
+    catch {
+        Write-Error "Failed to download the file. Error: $_"
+    }
+}
+
+# Check if the local file needs to be updated
+$folderPath = (Get-Location).Path
+$fileName = "DraculaGit.omp.json"
+$filePath = Join-Path -Path $folderPath -ChildPath $fileName
+$remoteFileUrl = "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/DraculaGit.omp.json"
+
+# Compare the hashes and download the new file if necessary
+if (Compare-Hashes -localFilePath $filePath -remoteUrl $remoteFileUrl) {
+    Download-DraculaGitFile -fileUrl $remoteFileUrl -filePath $filePath
+} else {
+    Write-Host "Local file is up-to-date. No update required." -ForegroundColor Green
+}
+
+
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
 
 #*Initliaize zoxide
