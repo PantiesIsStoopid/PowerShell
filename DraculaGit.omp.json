@@ -57,13 +57,12 @@
           "background": "#ff79c6",
           "foreground": "#f8f8f2",
           "properties": {
-            "style": "diamond",
-            "time_format": "15:04"
+            "style": "diamond"
           },
           "style": "diamond",
-          "template": " \u2699 {{ .CommandDuration | printf \"%.2fs\" }} ",
+          "template": " \u2699 {{ .ExecutionTime | printf \"%.2fs\" }} ",
           "trailing_diamond": "\ue0b0",
-          "type": "time"
+          "type": "execution_time"
         }
       ],
       "type": "prompt"
