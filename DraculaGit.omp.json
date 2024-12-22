@@ -40,7 +40,7 @@
           ],
           "foreground": "#000000",
           "leading_diamond": "\uE0B0",
-          "trailing_diamond": "\ue0b4",
+          "trailing_diamond": "\uE0B0",
           "properties": {
             "fetch_stash_count": true,
             "fetch_status": true
