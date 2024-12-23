@@ -40,6 +40,7 @@ These aliases help retrieve system information and manage files:
 These aliases assist with routine maintenance tasks:
 
 - **FlushDNS**: Clears the DNS cache to resolve DNS-related issues.
+- **DelCmdHistory**: Deletes all history of commands done in powershell,
 - **SystemScan**: Runs a DISM and SFC scan to repair system files and the Windows image.
 - **Update**: Updates all known applications on your system.
 - **EmptyBin**: Empties the Recycling Bin.

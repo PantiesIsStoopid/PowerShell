@@ -143,6 +143,13 @@ function FlushDNS {
   Write-Host "DNS has been flushed" -ForegroundColor Green
 }
 
+#* Delete Command History
+function DelCmdHistory {
+  Clear-History
+  Remove-Item -Path "$env:USERPROFILE\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\*" -Recurse -Force
+  Write-Host "Command history has been cleared" -ForegroundColor Green
+}
+
 #* Print the Public IP of the PC
 function GetPubIP {
   (Invoke-WebRequest http://ifconfig.me/ip).Content
@@ -465,6 +472,7 @@ File and System Information:
 
 System Maintenance:
 - FlushDNS: Clears the DNS cache.
+- DelCmdHistory: Deletes the command history.
 
 - SystemScan: Runs a DISM and SFC scan.
 - Update: Updates all known apps.
