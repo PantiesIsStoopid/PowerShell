@@ -93,7 +93,6 @@ Import-Module -Name Terminal-Icons -ErrorAction Stop
 Set-PSReadLineOption -PredictionSource History
 Set-PSReadLineOption -PredictionViewStyle Inline
 
-
 #* Import Chocolatey profile if it exists
 $ChocolateyProfile = Join-Path -Path $env:ChocolateyInstall -ChildPath "helpers\chocolateyProfile.psm1"
 if (Test-Path -Path $ChocolateyProfile) {
