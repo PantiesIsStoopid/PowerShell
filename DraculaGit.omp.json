@@ -31,7 +31,7 @@
             "{{ if gt .Ahead 0 }}#BD93F9{{ end }}",
             "{{ if gt .Behind 0 }}#BD93F9{{ end }}"
           ],
-          "foreground": "#F8F8F2",
+          "foreground": "#21222C",
           "leading_diamond": "<transparent,background>\uE0B0</>",
           "trailing_diamond": "\ue0b0",
           "properties": {
