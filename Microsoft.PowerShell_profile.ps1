@@ -86,16 +86,12 @@ if (-not (Get-Module -ListAvailable -Name PSReadLine)) {
   Install-Module -Name PSReadLine -Scope CurrentUser -Force -SkipPublisherCheck -ErrorAction Stop
 }
 
-#* Ensure the PSFzf module is installed and imported
-if (-not (Get-Module -ListAvailable -Name PSFzf)) {
-  Install-Module -Name PSFzf -Scope CurrentUser -Force -SkipPublisherCheck -ErrorAction Stop
-}
-
 #* Import the module
 Import-Module -Name Terminal-Icons -ErrorAction Stop
 
+#! Use left and right arrow keys to autocomplete commands
 Set-PSReadLineOption -PredictionSource History
-Set-PSReadLineOption -PredictionViewStyle ListView
+Set-PSReadLineOption -PredictionViewStyle Inline
 
 
 #* Import Chocolatey profile if it exists
