@@ -182,7 +182,7 @@ Catch {
 
 # Terminal Icons Install
 Try {
-  Install-Module -Name TerminalIcons -Repository PSGallery -Force
+  Install-Module -Name Terminal-Icons -Repository PSGallery -Force
 }
 Catch {
   Write-Error "Failed to install Terminal Icons module. Error: $_"
@@ -197,14 +197,6 @@ Try {
 }
 Catch {
   Write-Error "Failed to install PSReadLine module. Error: $_"
-}
-
-# PSFzf Install
-Try {
-  Install-Module PSFzf -Force
-}
-Catch {
-  Write-Error "Failed to install PSFzf module. Error: $_"
 }
 
 # Zoxide Install
