@@ -191,10 +191,20 @@ Catch {
 # PSReadLine Install
 Try {
   Install-Module PSReadLine -Force
+  
+  Set-PSReadLineOption -PredictionSource History
   Set-PSReadLineOption -PredictionViewStyle ListView
 }
 Catch {
   Write-Error "Failed to install PSReadLine module. Error: $_"
+}
+
+# PSFzf Install
+Try {
+  Install-Module PSFzf -Force
+}
+Catch {
+  Write-Error "Failed to install PSFzf module. Error: $_"
 }
 
 # Zoxide Install

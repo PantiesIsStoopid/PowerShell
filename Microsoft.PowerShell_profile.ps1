@@ -86,9 +86,22 @@ if (-not (Get-Module -ListAvailable -Name PSReadLine)) {
   Install-Module -Name PSReadLine -Scope CurrentUser -Force -SkipPublisherCheck -ErrorAction Stop
 }
 
+#* Ensure the PSFzf module is installed and imported
+if (-not (Get-Module -ListAvailable -Name PSFzf)) {
+  Install-Module -Name PSFzf -Scope CurrentUser -Force -SkipPublisherCheck -ErrorAction Stop
+}
+
 #* Import the module
 Import-Module -Name Terminal-Icons -ErrorAction Stop
+
+Set-PSReadLineOption -EditMode Emacs
+Set-PSReadLineOption -BellStyle None
+Set-PSReadLineKeyHandler -Chord "Ctrl+d" -Function DeleteChar
+Set-PSReadLineOption -PredictionSource History
 Set-PSReadLineOption -PredictionViewStyle ListView
+
+Import-Module PSFzf
+Set-PsFzfOption -PSReadlineChordProvider "Ctrl+f" -PSReadlineChordReverseHistory "Ctrl+r"
 
 #* Import Chocolatey profile if it exists
 $ChocolateyProfile = Join-Path -Path $env:ChocolateyInstall -ChildPath "helpers\chocolateyProfile.psm1"

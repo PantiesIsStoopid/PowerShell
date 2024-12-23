@@ -12,6 +12,22 @@ irm "https://github.com/PantiesIsStoopid/PowerShell/raw/main/Setup.ps1" | iex
 
 This command will download and execute the PowerShell script that sets up your profile, including aliases, themes, and utility functions.
 
+# Keybindings in PowerShell Script
+
+The following keybindings are configured in the PowerShell script and their actions are explained below:
+
+### 1. `Ctrl+d`
+- **Action**: Deletes the character under the cursor.
+- **Explanation**: This is a custom keybinding set by `Set-PSReadLineKeyHandler -Chord "Ctrl+d" -Function DeleteChar`.
+
+### 2. `Ctrl+f`
+- **Action**: Activates the fuzzy finder (`PSFzf`), allowing you to search through command history or files using fuzzy matching.
+- **Explanation**: This keybinding is configured by `Set-PsFzfOption -PSReadlineChordProvider "Ctrl+f"`.
+
+### 3. `Ctrl+r`
+- **Action**: Initiates a reverse search through your PowerShell command history.
+- **Explanation**: This keybinding is set by `Set-PsFzfOption -PSReadlineChordReverseHistory "Ctrl+r"`.
+
 ## Directory Navigation Aliases
 
 These aliases provide shortcuts for commonly used directories:
