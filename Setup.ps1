@@ -188,7 +188,16 @@ Catch {
   Write-Error "Failed to install Terminal Icons module. Error: $_"
 }
 
-# zoxide Install
+# PSReadLine Install
+Try {
+  Install-Module PSReadLine -Force
+  Set-PSReadLineOption -PredictionViewStyle ListView
+}
+Catch {
+  Write-Error "Failed to install PSReadLine module. Error: $_"
+}
+
+# Zoxide Install
 Try {
   winget install -e --id ajeetdsouza.zoxide
   Write-Host "zoxide installed successfully."

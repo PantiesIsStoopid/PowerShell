@@ -80,8 +80,15 @@ if (-not (Get-Module -ListAvailable -Name Terminal-Icons)) {
   Install-Module -Name Terminal-Icons -Scope CurrentUser -Force -SkipPublisherCheck -ErrorAction Stop
 }
 
+#* Import Modules and External Profiles
+#* Ensure PSReadLine module is installed before importing
+if (-not (Get-Module -ListAvailable -Name PSReadLine)) {
+  Install-Module -Name PSReadLine -Scope CurrentUser -Force -SkipPublisherCheck -ErrorAction Stop
+}
+
 #* Import the module
 Import-Module -Name Terminal-Icons -ErrorAction Stop
+Set-PSReadLineOption -PredictionViewStyle ListView
 
 #* Import Chocolatey profile if it exists
 $ChocolateyProfile = Join-Path -Path $env:ChocolateyInstall -ChildPath "helpers\chocolateyProfile.psm1"
@@ -204,8 +211,8 @@ function Update {
   winget upgrade "Microsoft.PowerShell" --accept-source-agreements --accept-package-agreements
 
   # Update all known apps
-  choco upgrade chocolatey
-  choco upgrade all
+  choco upgrade chocolatey -Y
+  choco upgrade all -Y
 
   # Windows Updates
   Install-Module -Name PSWindowsUpdate -Force -Scope CurrentUser
