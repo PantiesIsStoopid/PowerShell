@@ -139,12 +139,12 @@ function DLoads {
 
 #* List all files
 function LA {
-  Get-ChildItem -Path . -Force | Format-Table -AutoSize
+  Get-ChildItem
 }
 
 #* List all files including hidden
 function LL {
-  Get-ChildItem -Path . -Force -Hidden | Format-Table -AutoSize
+  Get-ChildItem -Path . -Force | Format-Table -AutoSize
 }
 
 #* Print Detailed System Information
