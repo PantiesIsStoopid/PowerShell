@@ -216,6 +216,14 @@ Catch {
   Write-Error "Failed to install fastfetch. Error: $_"
 }
 
+Try {
+  winget install junegunn.fzf
+  Write-Host "fzf installed successfully."
+}
+Catch {
+  Write-Error "Failed to install fzf. Error: $_"
+}
+
 # Ask the user if they want to install Yazi
 $InstallYazi = Read-Host "Do you want to install Yazi? (Y/N)"
 

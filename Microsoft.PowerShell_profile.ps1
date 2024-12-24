@@ -80,11 +80,14 @@ if (-not (Get-Module -ListAvailable -Name Terminal-Icons)) {
   Install-Module -Name Terminal-Icons -Scope CurrentUser -Force -SkipPublisherCheck -ErrorAction Stop
 }
 
-#* Import Modules and External Profiles
-#* Ensure PSReadLine module is installed before importing
 if (-not (Get-Module -ListAvailable -Name PSReadLine)) {
   Install-Module -Name PSReadLine -Scope CurrentUser -Force -SkipPublisherCheck -ErrorAction Stop
 }
+
+if (-not (Get-Module -ListAvailable -Name PSFzf)) {
+  Install-Module -Name PSFzf -Scope CurrentUser -Force
+}
+set-psfzfoption -psreadlinechordprovider "Ctrl+f" -psreadlinechordreversehistory "Ctrl+r"
 
 #* Import the module
 Import-Module -Name Terminal-Icons -ErrorAction Stop
