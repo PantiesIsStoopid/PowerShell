@@ -106,17 +106,13 @@ Clear-Host
 # Run Fastfetch only if not in Visual Studio Code Terminal
 if ($Env:TERM_PROGRAM -ne "vscode") {
   fastfetch --config "$env:USERPROFILE\Documents\PowerShell\FastConfig.jsonc"
-
 }
-
-
 
 #* Alias
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
 function cd {
   z $args
 }
-
 
 function touch($file) {
   "" | Out-File $file -Encoding ASCII 
