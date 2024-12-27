@@ -110,9 +110,8 @@ if ($Env:TERM_PROGRAM -ne "vscode") {
 
 #* Alias
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
-function cd {
-  z $args
-}
+Set-Alias -Name cd -Value z
+
 
 function touch($file) {
   "" | Out-File $file -Encoding ASCII 
