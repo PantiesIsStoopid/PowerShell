@@ -92,12 +92,6 @@ Import-Module -Name Terminal-Icons -ErrorAction Stop
 Import-Module -Name PSFzf -ErrorAction Stop
 Set-PSFzfOption -PSReadlineChordProvider "Ctrl+f" -PSReadlineChordReverseHistory "Ctrl+r"
 
-#* Import Chocolatey profile if it exists
-$ChocolateyProfile = Join-Path -Path $env:ChocolateyInstall -ChildPath "helpers\chocolateyProfile.psm1"
-if (Test-Path -Path $ChocolateyProfile) {
-  Import-Module -Name $ChocolateyProfile -ErrorAction Stop
-}
-
 #* Clear the console
 Clear-Host
 
