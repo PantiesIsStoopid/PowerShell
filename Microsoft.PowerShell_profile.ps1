@@ -4,21 +4,21 @@ if ([bool]([System.Security.Principal.WindowsIdentity]::GetCurrent()).IsSystem) 
 }
 
 # Initial GitHub.com connectivity check with 1 second timeout
-$canConnectToGitHub = Test-Connection github.com -Count 1 -Quiet -TimeoutSeconds 1
+$CanConnectToGitHub = Test-Connection github.com -Count 1 -Quiet -TimeoutSeconds 1
 
 # Check for Profile Updates
 function Update-Profile {
-  if (-not $global:canConnectToGitHub) {
+  if (-not $global:CanConnectToGitHub) {
     Write-Host "Skipping profile update check due to GitHub.com not responding within 1 second." -ForegroundColor Yellow
     return
   }
 
   try {
-    $url = "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/Microsoft.PowerShell_profile.ps1"
-    $oldhash = Get-FileHash $PROFILE
-    Invoke-RestMethod $url -OutFile "$env:temp/Microsoft.PowerShell_profile.ps1"
-    $newhash = Get-FileHash "$env:temp/Microsoft.PowerShell_profile.ps1"
-    if ($newhash.Hash -ne $oldhash.Hash) {
+    $Url = "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/Microsoft.PowerShell_profile.ps1"
+    $OldHash = Get-FileHash $PROFILE
+    Invoke-RestMethod $Url -OutFile "$env:temp/Microsoft.PowerShell_profile.ps1"
+    $NewHash = Get-FileHash "$env:temp/Microsoft.PowerShell_profile.ps1"
+    if ($NewHash.Hash -ne $OldHash.Hash) {
       Copy-Item -Path "$env:temp/Microsoft.PowerShell_profile.ps1" -Destination $PROFILE -Force
       Write-Host "Profile has been updated. Please restart your shell to reflect changes" -ForegroundColor Magenta
     }
@@ -33,23 +33,23 @@ function Update-Profile {
 Update-Profile
 
 function Update-PowerShell {
-  if (-not $global:canConnectToGitHub) {
+  if (-not $global:CanConnectToGitHub) {
     Write-Host "Skipping PowerShell update check due to GitHub.com not responding within 1 second." -ForegroundColor Yellow
     return
   }
 
   try {
     Write-Host "Checking for PowerShell updates..." -ForegroundColor Cyan
-    $updateNeeded = $false
-    $currentVersion = $PSVersionTable.PSVersion.ToString()
-    $gitHubApiUrl = "https://api.github.com/repos/PowerShell/PowerShell/releases/latest"
-    $latestReleaseInfo = Invoke-RestMethod -Uri $gitHubApiUrl
-    $latestVersion = $latestReleaseInfo.tag_name.Trim('v')
-    if ($currentVersion -lt $latestVersion) {
-      $updateNeeded = $true
+    $UpdateNeeded = $false
+    $CurrentVersion = $PSVersionTable.PSVersion.ToString()
+    $GitHubApiUrl = "https://api.github.com/repos/PowerShell/PowerShell/releases/latest"
+    $LatestReleaseInfo = Invoke-RestMethod -Uri $GitHubApiUrl
+    $LatestVersion = $LatestReleaseInfo.tag_name.Trim('v')
+    if ($CurrentVersion -lt $LatestVersion) {
+      $UpdateNeeded = $true
     }
 
-    if ($updateNeeded) {
+    if ($UpdateNeeded) {
       Write-Host "Updating PowerShell..." -ForegroundColor Yellow
       winget upgrade "Microsoft.PowerShell" --accept-source-agreements --accept-package-agreements
       Write-Host "PowerShell has been updated. Please restart your shell to reflect changes" -ForegroundColor Magenta
@@ -109,7 +109,7 @@ function Vim {
 }
 
 
-function touch($file) {
+function Touch($file) {
   "" | Out-File $file -Encoding ASCII 
 }
 
@@ -129,12 +129,12 @@ function DLoads {
 }
 
 #* List all files
-function LA {
+function La {
   Get-ChildItem
 }
 
 #* List all files including hidden
-function LL {
+function Ll {
   Get-ChildItem -Path . -Force | Format-Table -AutoSize
 }
 
@@ -180,7 +180,7 @@ function GetPrivIP {
 }
 
 #* Run speedtest for internet
-function Speedtest {  
+function SpeedTest {  
   Write-Host "Running Speedtest" -ForegroundColor Cyan
   Invoke-RestMethod asheroto.com/speedtest | Invoke-Expression
   Write-Host "Pinging 1.1.1.1" -ForegroundColor Cyan
@@ -190,7 +190,7 @@ function Speedtest {
 }
 
 #* Open current directory in File Explorer
-function FE {
+function Fe {
   Invoke-Item (Get-Location)
 }
 
@@ -260,12 +260,12 @@ function SystemScan {
 #* Function to clear system memory (not specifically standby RAM)
 function ClearRAM {
   # Define URL and paths
-  $url = "https://download.sysinternals.com/files/RAMMap.zip"
+  $Url = "https://download.sysinternals.com/files/RAMMap.zip"
   $zipPath = "C:\RAMMap.zip"
   $extractPath = "C:\RAMMap"
 
   # Download RAMMap
-  Invoke-WebRequest -Uri $url -OutFile $zipPath
+  Invoke-WebRequest -Uri $Url -OutFile $zipPath
 
   # Create extraction directory
   if (-Not (Test-Path $extractPath)) {
@@ -469,8 +469,8 @@ Directory Navigation:
 - Root: Changes directories to the C: drive.
 
 File and System Information:
-- LA: Lists all files in the current directory with detailed formatting.
-- LL: Lists all files, including hidden, in the current directory with detailed formatting.
+- La: Lists all files in the current directory with detailed formatting.
+- Ll: Lists all files, including hidden, in the current directory with detailed formatting.
 - SysInfo: Displays detailed system information.
 - GetPrivIP: Retrieves the private IP address of the machine.
 - GetPubIP (-IncIPv6): Retrieves the public IP address of the machine (-IncIPv6).
@@ -486,7 +486,7 @@ System Maintenance:
 - ClearCache: Clears Windows caches.
 
 Utility Functions:
-- FE: Opens File Explorer in your current directory.
+- Fe: Opens File Explorer in your current directory.
 - WinUtil: Opens the Chris Titus Tech Windows utility.
 - ReloadProfile: Reloads the terminal profile.
 - ClearRAM: Cleans up the standby memory in RAM.
