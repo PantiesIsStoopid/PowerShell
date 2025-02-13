@@ -66,33 +66,37 @@ if (-not ($PSCmdlet.MyInvocation.PSCommandPath -match 'oh-my-posh')) {
   oh-my-posh init pwsh --config "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/DraculaGit.omp.json" | Invoke-Expression
 }
 
+
 # List of required modules
 $modules = @("Terminal-Icons", "PSReadLine", "PSFzf")
 
 foreach ($module in $modules) {
   try {
-    # Try to import the module
+    # First attempt to import
     Import-Module -Name $module -ErrorAction Stop
     Write-Host "$module imported successfully" -ForegroundColor Green
   }
   catch {
     Write-Host "$module not found. Installing..." -ForegroundColor Yellow
-    
+
+    # Install the module
+    Install-Module -Name $module -Force -Scope CurrentUser
+
     try {
-      # Install and import the module
-      Install-Module -Name $module -Force -Scope CurrentUser
+      # Second attempt to import after installation
       Import-Module -Name $module -ErrorAction Stop
       Write-Host "$module installed and imported successfully" -ForegroundColor Green
     }
     catch {
-      Write-Host "Failed to install or import $module" -ForegroundColor Red
+      Write-Host "Failed to import $module after installation" -ForegroundColor Red
     }
   }
 }
 
 
-
 Set-PSFzfOption -PSReadlineChordProvider "Ctrl+f" -PSReadlineChordReverseHistory "Ctrl+r"
+
+clear
 
 # Run Fastfetch (Skip in VSCode)
 if ($Env:TERM_PROGRAM -ne "vscode") {
