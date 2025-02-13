@@ -78,9 +78,6 @@ $modules | ForEach-Object {
 
 Set-PSFzfOption -PSReadlineChordProvider "Ctrl+f" -PSReadlineChordReverseHistory "Ctrl+r"
 
-# Clear Console
-Clear-Host
-
 # Run Fastfetch (Skip in VSCode)
 if ($Env:TERM_PROGRAM -ne "vscode") {
   fastfetch --config "$env:USERPROFILE\Documents\PowerShell\FastConfig.jsonc"
