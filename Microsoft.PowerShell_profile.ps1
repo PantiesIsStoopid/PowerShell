@@ -69,13 +69,25 @@ if (-not ($PSCmdlet.MyInvocation.PSCommandPath -match 'oh-my-posh')) {
 
 # Install and Import Modules Efficiently
 $modules = @("Terminal-Icons", "PSReadLine", "PSFzf")
+
+# Install modules if not already available
 $modules | ForEach-Object {
   if (-not (Get-Module -ListAvailable -Name $_)) {
-    Install-Module -Name $_ -Scope CurrentUser -Force -SkipPublisherCheck -ErrorAction SilentlyContinue -AsJob
+    try {
+      Install-Module -Name $_ -Scope CurrentUser -Force -SkipPublisherCheck -ErrorAction SilentlyContinue
+    }
+    catch { Write-Error "Failed to install module $_: $_" }
   }
 }
 
-$modules | ForEach-Object { Import-Module -Name $_ -ErrorAction Stop }
+# Import modules
+$modules | ForEach-Object { 
+  try {
+    Import-Module -Name $_ -ErrorAction Stop
+  }
+  catch { Write-Error "Failed to import module $_: $_" }
+}
+
 
 Set-PSFzfOption -PSReadlineChordProvider "Ctrl+f" -PSReadlineChordReverseHistory "Ctrl+r"
 
