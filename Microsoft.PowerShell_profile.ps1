@@ -1,8 +1,3 @@
-# Opt-out of telemetry (only if running as admin)
-if ([System.Security.Principal.WindowsIdentity]::GetCurrent().IsSystem) {
-  [System.Environment]::SetEnvironmentVariable('POWERSHELL_TELEMETRY_OPTOUT', 'true', [System.EnvironmentVariableTarget]::Machine)
-}
-
 # Check GitHub connectivity (1s timeout)
 $global:canConnectToGitHub = Test-Connection github.com -Count 1 -Quiet -TimeoutSeconds 1
 
@@ -66,7 +61,6 @@ if (-not ($PSCmdlet.MyInvocation.PSCommandPath -match 'oh-my-posh')) {
   oh-my-posh init pwsh --config "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/DraculaGit.omp.json" | Invoke-Expression
 }
 
-
 # List of required modules
 $modules = @("Terminal-Icons", "PSReadLine", "PSFzf")
 
@@ -93,10 +87,9 @@ foreach ($module in $modules) {
   }
 }
 
-
 Set-PSFzfOption -PSReadlineChordProvider "Ctrl+f" -PSReadlineChordReverseHistory "Ctrl+r"
 
-clear
+Clear-Host
 
 # Run Fastfetch (Skip in VSCode)
 if ($Env:TERM_PROGRAM -ne "vscode") {
@@ -113,7 +106,7 @@ function Touch($file) {
   "" | Out-File $file -Encoding ASCII 
 }
 
-# Set directory to Documents
+#* Set directory to Documents
 function Docs {
   Set-Location -Path "$HOME\Documents"
 }
