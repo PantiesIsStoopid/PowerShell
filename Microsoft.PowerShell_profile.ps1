@@ -3,17 +3,11 @@ if ([System.Security.Principal.WindowsIdentity]::GetCurrent().IsSystem) {
   [System.Environment]::SetEnvironmentVariable('POWERSHELL_TELEMETRY_OPTOUT', 'true', [System.EnvironmentVariableTarget]::Machine)
 }
 
-<<<<<<< HEAD
 # Check GitHub connectivity (1s timeout)
 $canConnectToGitHub = Test-Connection github.com -Count 1 -Quiet -TimeoutSeconds 1
-=======
-# Initial GitHub.com connectivity check with 1 second timeout
-$CanConnectToGitHub = Test-Connection github.com -Count 1 -Quiet -TimeoutSeconds 1
->>>>>>> 24ae9e7cc28e5f25bb2244eceb5b38c9467259fb
 
 # Update PowerShell Profile
 function Update-Profile {
-<<<<<<< HEAD
   if (-not $canConnectToGitHub) { return }
 
   try {
@@ -24,21 +18,6 @@ function Update-Profile {
     if ((Get-FileHash $tempFile).Hash -ne (Get-FileHash $PROFILE).Hash) {
       Copy-Item -Path $tempFile -Destination $PROFILE -Force
       Write-Host "Profile updated. Restart PowerShell to apply changes." -ForegroundColor Magenta
-=======
-  if (-not $global:CanConnectToGitHub) {
-    Write-Host "Skipping profile update check due to GitHub.com not responding within 1 second." -ForegroundColor Yellow
-    return
-  }
-
-  try {
-    $Url = "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/Microsoft.PowerShell_profile.ps1"
-    $OldHash = Get-FileHash $PROFILE
-    Invoke-RestMethod $Url -OutFile "$env:temp/Microsoft.PowerShell_profile.ps1"
-    $NewHash = Get-FileHash "$env:temp/Microsoft.PowerShell_profile.ps1"
-    if ($NewHash.Hash -ne $OldHash.Hash) {
-      Copy-Item -Path "$env:temp/Microsoft.PowerShell_profile.ps1" -Destination $PROFILE -Force
-      Write-Host "Profile has been updated. Please restart your shell to reflect changes" -ForegroundColor Magenta
->>>>>>> 24ae9e7cc28e5f25bb2244eceb5b38c9467259fb
     }
   }
   catch { Write-Error "Profile update failed: $_" }
@@ -48,7 +27,6 @@ Update-Profile
 
 # Update PowerShell
 function Update-PowerShell {
-<<<<<<< HEAD
   if (-not $canConnectToGitHub) { return }
 
   try {
@@ -56,25 +34,6 @@ function Update-PowerShell {
     $latestVersion = (Invoke-RestMethod "https://api.github.com/repos/PowerShell/PowerShell/releases/latest").tag_name.Trim('v')
 
     if ($currentVersion -lt $latestVersion) {
-=======
-  if (-not $global:CanConnectToGitHub) {
-    Write-Host "Skipping PowerShell update check due to GitHub.com not responding within 1 second." -ForegroundColor Yellow
-    return
-  }
-
-  try {
-    Write-Host "Checking for PowerShell updates..." -ForegroundColor Cyan
-    $UpdateNeeded = $false
-    $CurrentVersion = $PSVersionTable.PSVersion.ToString()
-    $GitHubApiUrl = "https://api.github.com/repos/PowerShell/PowerShell/releases/latest"
-    $LatestReleaseInfo = Invoke-RestMethod -Uri $GitHubApiUrl
-    $LatestVersion = $LatestReleaseInfo.tag_name.Trim('v')
-    if ($CurrentVersion -lt $LatestVersion) {
-      $UpdateNeeded = $true
-    }
-
-    if ($UpdateNeeded) {
->>>>>>> 24ae9e7cc28e5f25bb2244eceb5b38c9467259fb
       Write-Host "Updating PowerShell..." -ForegroundColor Yellow
       winget upgrade "Microsoft.PowerShell" --accept-source-agreements --accept-package-agreements
       Write-Host "PowerShell updated. Restart to apply changes." -ForegroundColor Magenta
