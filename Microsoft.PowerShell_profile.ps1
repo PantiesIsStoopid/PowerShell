@@ -1,103 +1,72 @@
-#Opt-out of telemetry before doing anything, only if PowerShell is run as admin
-if ([bool]([System.Security.Principal.WindowsIdentity]::GetCurrent()).IsSystem) {
+# Opt-out of telemetry (only if running as admin)
+if ([System.Security.Principal.WindowsIdentity]::GetCurrent().IsSystem) {
   [System.Environment]::SetEnvironmentVariable('POWERSHELL_TELEMETRY_OPTOUT', 'true', [System.EnvironmentVariableTarget]::Machine)
 }
 
-# Initial GitHub.com connectivity check with 1 second timeout
+# Check GitHub connectivity (1s timeout)
 $canConnectToGitHub = Test-Connection github.com -Count 1 -Quiet -TimeoutSeconds 1
 
-# Check for Profile Updates
+# Update PowerShell Profile
 function Update-Profile {
-  if (-not $global:canConnectToGitHub) {
-    Write-Host "Skipping profile update check due to GitHub.com not responding within 1 second." -ForegroundColor Yellow
-    return
-  }
+  if (-not $canConnectToGitHub) { return }
 
   try {
     $url = "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/Microsoft.PowerShell_profile.ps1"
-    $oldhash = Get-FileHash $PROFILE
-    Invoke-RestMethod $url -OutFile "$env:temp/Microsoft.PowerShell_profile.ps1"
-    $newhash = Get-FileHash "$env:temp/Microsoft.PowerShell_profile.ps1"
-    if ($newhash.Hash -ne $oldhash.Hash) {
-      Copy-Item -Path "$env:temp/Microsoft.PowerShell_profile.ps1" -Destination $PROFILE -Force
-      Write-Host "Profile has been updated. Please restart your shell to reflect changes" -ForegroundColor Magenta
+    $tempFile = "$env:temp\Microsoft.PowerShell_profile.ps1"
+    
+    Invoke-RestMethod -Uri $url -OutFile $tempFile
+    if ((Get-FileHash $tempFile).Hash -ne (Get-FileHash $PROFILE).Hash) {
+      Copy-Item -Path $tempFile -Destination $PROFILE -Force
+      Write-Host "Profile updated. Restart PowerShell to apply changes." -ForegroundColor Magenta
     }
   }
-  catch {
-    Write-Error "Unable to check for `$profile updates"
-  }
-  finally {
-    Remove-Item "$env:temp/Microsoft.PowerShell_profile.ps1" -ErrorAction SilentlyContinue
-  }
+  catch { Write-Error "Profile update failed: $_" }
+  finally { Remove-Item -Path $tempFile -ErrorAction SilentlyContinue }
 }
 Update-Profile
 
+# Update PowerShell
 function Update-PowerShell {
-  if (-not $global:canConnectToGitHub) {
-    Write-Host "Skipping PowerShell update check due to GitHub.com not responding within 1 second." -ForegroundColor Yellow
-    return
-  }
+  if (-not $canConnectToGitHub) { return }
 
   try {
-    Write-Host "Checking for PowerShell updates..." -ForegroundColor Cyan
-    $updateNeeded = $false
     $currentVersion = $PSVersionTable.PSVersion.ToString()
-    $gitHubApiUrl = "https://api.github.com/repos/PowerShell/PowerShell/releases/latest"
-    $latestReleaseInfo = Invoke-RestMethod -Uri $gitHubApiUrl
-    $latestVersion = $latestReleaseInfo.tag_name.Trim('v')
-    if ($currentVersion -lt $latestVersion) {
-      $updateNeeded = $true
-    }
+    $latestVersion = (Invoke-RestMethod "https://api.github.com/repos/PowerShell/PowerShell/releases/latest").tag_name.Trim('v')
 
-    if ($updateNeeded) {
+    if ($currentVersion -lt $latestVersion) {
       Write-Host "Updating PowerShell..." -ForegroundColor Yellow
       winget upgrade "Microsoft.PowerShell" --accept-source-agreements --accept-package-agreements
-      Write-Host "PowerShell has been updated. Please restart your shell to reflect changes" -ForegroundColor Magenta
-    }
-    else {
-      Write-Host "Your PowerShell is up to date." -ForegroundColor Green
+      Write-Host "PowerShell updated. Restart to apply changes." -ForegroundColor Magenta
     }
   }
-  catch {
-    Write-Error "Failed to update PowerShell. Error: $_"
-  }
+  catch { Write-Error "PowerShell update failed: $_" }
 }
 Update-PowerShell
 
-#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
-
-#*Initliaize zoxide
+# Initialize Zoxide
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
 
-#* Initialize Oh My Posh config
+# Initialize Oh My Posh
 if (-not ($PSCmdlet.MyInvocation.PSCommandPath -match 'oh-my-posh')) {
   oh-my-posh init pwsh --config "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/DraculaGit.omp.json" | Invoke-Expression
 }
 
-#* Import Modules and External Profiles
-#* Ensure Terminal-Icons module is installed before importing
-if (-not (Get-Module -ListAvailable -Name Terminal-Icons)) {
-  Install-Module -Name Terminal-Icons -Scope CurrentUser -Force -SkipPublisherCheck -ErrorAction Stop
+# Install and Import Modules Efficiently
+$modules = @("Terminal-Icons", "PSReadLine", "PSFzf")
+$modules | ForEach-Object {
+  if (-not (Get-Module -ListAvailable -Name $_)) {
+    Install-Module -Name $_ -Scope CurrentUser -Force -SkipPublisherCheck -ErrorAction SilentlyContinue -AsJob
+  }
 }
 
-if (-not (Get-Module -ListAvailable -Name PSReadLine)) {
-  Install-Module -Name PSReadLine -Scope CurrentUser -Force -SkipPublisherCheck -ErrorAction Stop
-}
+$modules | ForEach-Object { Import-Module -Name $_ -ErrorAction Stop }
 
-if (-not (Get-Module -ListAvailable -Name PSFzf)) {
-  Install-Module -Name PSFzf -Scope CurrentUser -Force
-}
-#* Import the module
-Import-Module -Name Terminal-Icons -ErrorAction Stop
-Import-Module -Name PSFzf -ErrorAction Stop
 Set-PSFzfOption -PSReadlineChordProvider "Ctrl+f" -PSReadlineChordReverseHistory "Ctrl+r"
 
-#* Clear the console
+# Clear Console
 Clear-Host
 
-#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
-
-# Run Fastfetch only if not in Visual Studio Code Terminal
+# Run Fastfetch (Skip in VSCode)
 if ($Env:TERM_PROGRAM -ne "vscode") {
   fastfetch --config "$env:USERPROFILE\Documents\PowerShell\FastConfig.jsonc"
 }
