@@ -59,15 +59,13 @@ foreach ($module in $modules) {
     try {
       Install-Module -Name $module -Scope CurrentUser -Force -SkipPublisherCheck -ErrorAction Stop
     }
-    catch { Write-Error "Failed to install module ${module}: $_" }
-
+    catch { Write-Error "Failed to install module $module`: $_" }
   }
 
   try {
     Import-Module -Name $module -ErrorAction Stop
   }
-  catch { Write-Error "Failed to install module ${module}: $_" }
-
+  catch { Write-Error "Failed to import module $module`: $_" }
 }
 
 Set-PSFzfOption -PSReadlineChordProvider "Ctrl+f" -PSReadlineChordReverseHistory "Ctrl+r"
