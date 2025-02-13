@@ -7,7 +7,6 @@ if ([System.Security.Principal.WindowsIdentity]::GetCurrent().IsSystem) {
 $global:canConnectToGitHub = Test-Connection github.com -Count 1 -Quiet -TimeoutSeconds 1
 
 # Update PowerShell Profile
-
 function Update-Profile {
   try {
     $Url = "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/Microsoft.PowerShell_profile.ps1"
@@ -31,7 +30,6 @@ function Update-Profile {
 }
 
 # Update PowerShell
-
 function Update-PowerShell {
   try {
     Write-Host "Checking for PowerShell updates..." -ForegroundColor Cyan
@@ -70,24 +68,13 @@ if (-not ($PSCmdlet.MyInvocation.PSCommandPath -match 'oh-my-posh')) {
 # Install and Import Modules Efficiently
 $modules = @("Terminal-Icons", "PSReadLine", "PSFzf")
 
-# Install modules if not already available
-$modules | ForEach-Object {
-  if (-not (Get-Module -ListAvailable -Name $_)) {
-    try {
-      Install-Module -Name $_ -Scope CurrentUser -Force -SkipPublisherCheck -ErrorAction SilentlyContinue
-    }
-    catch { Write-Error "Failed to install module $_: $_" }
-  }
-}
-
 # Import modules
 $modules | ForEach-Object { 
   try {
     Import-Module -Name $_ -ErrorAction Stop
   }
-  catch { Write-Error "Failed to import module $_: $_" }
+  catch { Write-Error "Failed to import module" }
 }
-
 
 Set-PSFzfOption -PSReadlineChordProvider "Ctrl+f" -PSReadlineChordReverseHistory "Ctrl+r"
 
@@ -104,7 +91,6 @@ if ($Env:TERM_PROGRAM -ne "vscode") {
 function Vim {
   nvim
 }
-
 
 function Touch($file) {
   "" | Out-File $file -Encoding ASCII 
