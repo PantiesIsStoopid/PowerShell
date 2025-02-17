@@ -27,8 +27,8 @@ These aliases provide shortcuts for commonly used directories:
 
 These aliases help retrieve system information and manage files:
 
-- **LA**: Lists all files in the current directory with detailed formatting.
-- **LL**: Lists all files, including hidden files, in the current directory with detailed formatting.
+- **La**: Lists all files in the current directory with detailed formatting.
+- **Ll**: Lists all files, including hidden files, in the current directory with detailed formatting.
 - **SysInfo**: Displays detailed system information (CPU, memory, OS version, etc.).
 - **GetPrivIP**: Retrieves the private IP address of your machine.
 - **GetPubIP**: Retrieves the public IP address of your machine.
@@ -40,7 +40,7 @@ These aliases help retrieve system information and manage files:
 These aliases assist with routine maintenance tasks:
 
 - **FlushDNS**: Clears the DNS cache to resolve DNS-related issues.
-- **DelCmdHistory**: Deletes all history of commands done in powershell,
+- **DelCmdHistory**: Deletes all history of commands done in PowerShell.
 - **SystemScan**: Runs a DISM and SFC scan to repair system files and the Windows image.
 - **Update**: Updates all known applications on your system.
 - **EmptyBin**: Empties the Recycling Bin.
@@ -50,7 +50,7 @@ These aliases assist with routine maintenance tasks:
 
 These functions help with file management and system utilities:
 
-- **FE**: Opens File Explorer in your current directory.
+- **Fe**: Opens File Explorer in your current directory.
 - **WinUtil**: Opens the Chris Titus Tech Windows utility.
 - **ReloadProfile**: Reloads your PowerShell profile to apply any changes.
 - **ClearRAM**: Cleans up the standby memory in RAM to improve performance.
