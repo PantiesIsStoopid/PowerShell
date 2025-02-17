@@ -57,9 +57,8 @@ Update-PowerShell
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
 
 # Initialize Oh My Posh
-if (-not ($PSCmdlet.MyInvocation.PSCommandPath -match 'oh-my-posh')) {
   oh-my-posh init pwsh --config "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/DraculaGit.omp.json" | Invoke-Expression
-}
+
 
 # List of required modules
 $modules = @("Terminal-Icons", "PSReadLine", "PSFzf")
@@ -98,27 +97,9 @@ if ($Env:TERM_PROGRAM -ne "vscode") {
 
 #* Alias
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
-function Vim {
-  nvim
-}
 
 function Touch($file) {
   "" | Out-File $file -Encoding ASCII 
-}
-
-#* Set directory to Documents
-function Docs {
-  Set-Location -Path "$HOME\Documents"
-}
-
-#* Set directory to Desktop
-function Dtop {
-  Set-Location -Path "$HOME\Desktop"
-}
-
-#* Move to the Downloads directory
-function DLoads {
-  Set-Location -Path "$HOME\Downloads"
 }
 
 #* List all files
@@ -129,11 +110,6 @@ function La {
 #* List all files including hidden
 function Ll {
   Get-ChildItem -Path . -Force | Format-Table -AutoSize
-}
-
-#* Print Detailed System Information
-function SysInfo {
-  Get-ComputerInfo
 }
 
 #* Flush DNS Server
@@ -185,16 +161,6 @@ function SpeedTest {
 #* Open current directory in File Explorer
 function Fe {
   Invoke-Item (Get-Location)
-}
-
-#* Change directories to user's home
-function Home {
-  Set-Location -Path "$HOME"
-}
-
-#* Change directories to C drive
-function Root {
-  Set-Location C:\
 }
 
 #* Update function
@@ -298,13 +264,6 @@ function EmptyBin {
   Start-Process -FilePath "cleanmgr.exe" -ArgumentList "/sagerun:1" -Wait
 }
 
-#* Calculate Pi
-function CalcPi {
-  # Display result
-  $Pi = "3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821480865132823066470938446095505822317253594081284811174502841027019385211055596446229489549303819644288109756659334461284756482337867831652712019091456485669234603486104543266482133936072602491412737245870066063155881748815209209628292540917153643678925903600113305305488204665223576580719180188"
-  Write-Host "Calculating complete result in clipboard." -ForegroundColor Green
-  Set-Clipboard -Value $Pi
-}
 
 #*Shutdown
 function Shutdown {
@@ -452,7 +411,6 @@ function ShowHelp {
   @"
 PowerShell Profile Help
 =======================
-
 Directory Navigation:
 - Touch: Create a file in your current directory (FileName.Ext).
 - Docs: Changes the current directory to the user's Documents folder.
@@ -472,7 +430,6 @@ File and System Information:
 System Maintenance:
 - FlushDNS: Clears the DNS cache.
 - DelCmdHistory: Deletes the command history.
-
 - SystemScan: Runs a DISM and SFC scan.
 - Update: Updates all known apps.
 - EmptyBin: Empties the Recycling bin.
@@ -492,16 +449,15 @@ Utility Functions:
 Git Function:
 - GL: Shortcut for 'git log'.
 - GS: Shortcut for 'git status'.
-- GA - Shortcut for 'git add .'.
-- GC <message> - Shortcut for 'git commit -m'.
-- GP - Shortcut for 'git push'.
-- G - Changes to the GitHub directory.
-- GCom <message> - Adds all changes and commits with the specified message.
-- LazyG <message> - Adds all changes, commits with the specified message, and pushes to the remote repository.
-- LazyInit <URL> - Adds all steps for the init of a repo and can add remote url.
+- GA: Shortcut for 'git add.'.
+- GC <message>: Shortcut for 'git commit -m'.
+- GP: Shortcut for 'git push'.
+- G: Changes to the GitHub directory.
+- GCom <message>: Adds all changes and commits with the specified message.
+- LazyG <message>: Adds all changes, commits with the specified message, and pushes to the remote repository.
+- LazyInit <URL>: Adds all steps for the init of a repo and can add remote url.
 
-- CheatSheet: Displays a list of all the most common commands.
+CheatSheet: Displays a list of all the most common commands.
 
 Use 'ShowHelp' to display this help message.
-"@
-}
+"@}
