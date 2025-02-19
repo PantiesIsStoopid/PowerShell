@@ -471,6 +471,11 @@ Additional Functions:
 - Touch: Creates a file in the current directory.
 - ShowHelp: Displays this help message.
 
+Keybinds:
+- Ctrl + F: opens fuzzy finder
+- Ctrl + R: fuzzy find through past command history
+- Ctrl + G: lets you grep in your current folder
+
 CheatSheet: Displays a list of all the most common commands.
 
 Use 'ShowHelp' to display this help message.
