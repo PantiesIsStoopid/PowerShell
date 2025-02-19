@@ -224,6 +224,14 @@ Catch {
   Write-Error "Failed to install fzf. Error: $_"
 }
 
+Try {
+  choco install bat
+  Write-Host "bat installed successfully."
+}
+Catch {
+  Write-Error "Failed to install bat. Error: $_"
+}
+
 # Ask the user if they want to install Yazi
 $InstallYazi = Read-Host "Do you want to install Yazi? (Y/N)"
 
