@@ -87,7 +87,6 @@ foreach ($module in $modules) {
 }
 
 Set-PSFzfOption -PSReadlineChordProvider "Ctrl+f" -PSReadlineChordReverseHistory "Ctrl+r"
-$env:BAT_THEME = "Dracula"
 
 Clear-Host
 
@@ -105,9 +104,16 @@ function Touch($file) {
 
 function Grep {
   $env:BAT_THEME = "Dracula"
-  $file = fzf --preview "bat --style=numbers --color=always {}"
-  if ($file) { Invoke-Item $file }
+  $file = fzf --preview "
+    if [[ -f {} && {} =~ \.(jpg|jpeg|png|gif|bmp|tiff)$ ]]; then
+      w3m -S -o "imgdisplay=true" {}
+    else
+      bat --style=numbers --color=always {}
+    fi
+  "
+  if ($file) { Invoke-Item "$file" }
 }
+
 
 #* List all files
 function La {
