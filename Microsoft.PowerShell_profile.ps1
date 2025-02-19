@@ -57,7 +57,7 @@ Update-PowerShell
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
 
 # Initialize Oh My Posh
-  oh-my-posh init pwsh --config "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/DraculaGit.omp.json" | Invoke-Expression
+oh-my-posh init pwsh --config "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/DraculaGit.omp.json" | Invoke-Expression
 
 
 # List of required modules
@@ -67,7 +67,6 @@ foreach ($module in $modules) {
   try {
     # First attempt to import
     Import-Module -Name $module -ErrorAction Stop
-    Write-Host "$module imported successfully" -ForegroundColor Green
   }
   catch {
     Write-Host "$module not found. Installing..." -ForegroundColor Yellow
