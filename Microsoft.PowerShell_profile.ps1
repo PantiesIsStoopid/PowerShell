@@ -98,23 +98,17 @@ if ($Env:TERM_PROGRAM -ne "vscode") {
 #* Alias
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
 
+#* Make a file with a given name and extension
 function Touch($file) {
   "" | Out-File $file -Encoding ASCII 
 }
 
+#* Let you search and preview files
 function Grep {
   $env:BAT_THEME = "Dracula"
-  $file = fzf --preview "
-    if [[ -f {} && {} =~ \.(jpg|jpeg|png|gif|bmp|tiff)$ ]]; then
-      w3m {}
-    else
-      bat --style=numbers --color=always {}
-    fi
-  "
+  $file = fzf --preview "bat --style=numbers --color=always {}"
   if ($file) { Invoke-Item "$file" }
 }
-
-
 
 #* List all files
 function La {
