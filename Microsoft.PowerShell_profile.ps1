@@ -86,6 +86,7 @@ foreach ($module in $modules) {
 }
 
 Set-PSFzfOption -PSReadlineChordProvider "Ctrl+f" -PSReadlineChordReverseHistory "Ctrl+r"
+Set-PSReadLineKeyHandler -Chord Ctrl+g -ScriptBlock { Grep }
 
 Clear-Host
 
