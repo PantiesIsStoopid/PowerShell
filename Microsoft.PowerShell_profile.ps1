@@ -99,15 +99,14 @@ if ($Env:TERM_PROGRAM -ne "vscode") {
 #* Alias
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
 
+function Touch($file) {
+  "" | Out-File $file -Encoding ASCII 
+}
+
 function Grep {
   $env:BAT_THEME = "Dracula"
   $file = fzf --preview "bat --style=numbers --color=always {}"
   if ($file) { Invoke-Item $file }
-}
-
-
-function Touch($file) {
-  "" | Out-File $file -Encoding ASCII 
 }
 
 #* List all files
@@ -419,6 +418,7 @@ function ShowHelp {
   @"
 PowerShell Profile Help
 =======================
+
 Directory Navigation:
 - Touch: Create a file in your current directory (FileName.Ext).
 - Docs: Changes the current directory to the user's Documents folder.
@@ -451,19 +451,24 @@ Utility Functions:
 - ReinstallWinget: Uninstalls Winget and reinstalls it.
 - CalcPi: Calculates pi to 100 digits.
 - Shutdown: Shutdown PC (-Force to force shutdown).
-- RPassword <Length>: Makes a random password.
+- RPassword <Length>: Generates a random password of the specified length.
 - RandomFact: Prints a random fun fact.
 
-Git Function:
+Git Functions:
 - GL: Shortcut for 'git log'.
 - GS: Shortcut for 'git status'.
 - GA: Shortcut for 'git add.'.
-- GC <message>: Shortcut for 'git commit -m'.
+- GC <message>: Shortcut for 'git commit -m' with the specified message.
 - GP: Shortcut for 'git push'.
 - G: Changes to the GitHub directory.
 - GCom <message>: Adds all changes and commits with the specified message.
 - LazyG <message>: Adds all changes, commits with the specified message, and pushes to the remote repository.
-- LazyInit <URL>: Adds all steps for the init of a repo and can add remote url.
+- LazyInit <URL>: Adds all steps for initializing a repo and can add a remote URL.
+
+Additional Functions:
+- Grep: Launches an interactive file search using `fzf` and `bat` preview. Opens the selected file using the default editor.
+- Touch: Creates a file in the current directory.
+- ShowHelp: Displays this help message.
 
 CheatSheet: Displays a list of all the most common commands.
 

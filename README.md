@@ -1,4 +1,5 @@
-# PowerShell Profile Setup Documentation
+PowerShell Profile Setup Documentation
+======================================
 
 This guide explains the features and usage of a custom PowerShell profile designed to improve system navigation, information gathering, maintenance, and Git management. The profile includes multiple aliases for various tasks, along with system utilities and Git functions.
 
@@ -6,9 +7,9 @@ This guide explains the features and usage of a custom PowerShell profile design
 
 To install this custom PowerShell profile, run the following command in your PowerShell terminal:
 
-```powershell
+````powershell
 irm "https://github.com/PantiesIsStoopid/PowerShell/raw/main/Setup.ps1" | iex
-```
+````
 
 This command will download and execute the PowerShell script that sets up your profile, including aliases, themes, and utility functions.
 
@@ -90,6 +91,10 @@ The setup script ensures that any telemetry or data collection services are opte
 
 This setup can be installed effortlessly via the following one-liner:
 
-```powershell
+````powershell
 irm "https://github.com/PantiesIsStoopid/PowerShell/raw/main/Setup.ps1" | iex
-```
+````
+
+`````
+
+Let me know if you'd like any changes!
