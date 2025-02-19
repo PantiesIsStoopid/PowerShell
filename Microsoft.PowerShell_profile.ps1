@@ -99,10 +99,12 @@ if ($Env:TERM_PROGRAM -ne "vscode") {
 #* Alias
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
 
-function grep {
-  fzf --preview "bat --style=numbers --color=always {}"
-
+function Grep {
+  $env:BAT_THEME = "Dracula"
+  $file = fzf --preview "bat --style=numbers --color=always {}"
+  if ($file) { Invoke-Item $file }
 }
+
 
 function Touch($file) {
   "" | Out-File $file -Encoding ASCII 
