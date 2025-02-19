@@ -106,13 +106,14 @@ function Grep {
   $env:BAT_THEME = "Dracula"
   $file = fzf --preview "
     if [[ -f {} && {} =~ \.(jpg|jpeg|png|gif|bmp|tiff)$ ]]; then
-      w3m -S -o "imgdisplay=true" {}
+      w3m {}
     else
       bat --style=numbers --color=always {}
     fi
   "
   if ($file) { Invoke-Item "$file" }
 }
+
 
 
 #* List all files
