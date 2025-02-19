@@ -87,6 +87,7 @@ foreach ($module in $modules) {
 }
 
 Set-PSFzfOption -PSReadlineChordProvider "Ctrl+f" -PSReadlineChordReverseHistory "Ctrl+r"
+$env:BAT_THEME = "Dracula"
 
 Clear-Host
 
@@ -97,6 +98,11 @@ if ($Env:TERM_PROGRAM -ne "vscode") {
 
 #* Alias
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+
+function grep {
+  fzf --preview "bat --style=numbers --color=always {}"
+
+}
 
 function Touch($file) {
   "" | Out-File $file -Encoding ASCII 
