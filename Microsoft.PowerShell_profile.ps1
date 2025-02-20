@@ -72,7 +72,7 @@ foreach ($module in $modules) {
     Write-Host "$module not found. Installing..." -ForegroundColor Yellow
 
     # Install the module
-    Install-Module -Name $module -Force -Scope CurrentUser
+    Install-Module -Name $module -Repository PSGallery -Force
 
     try {
       # Second attempt to import after installation
