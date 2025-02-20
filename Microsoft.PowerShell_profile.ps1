@@ -84,6 +84,8 @@ $ENV:FZF_DEFAULT_OPTS = @"
 --multi
 "@
 
+Clear-Host
+
 # Run Fastfetch (Skip in VSCode)
 if ($Env:TERM_PROGRAM -ne "vscode") {
   fastfetch --config "$env:USERPROFILE\Documents\PowerShell\FastConfig.jsonc"
