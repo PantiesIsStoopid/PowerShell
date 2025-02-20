@@ -62,7 +62,9 @@ try {
   Import-Module -Name PSFzf -ErrorAction Stop
 }
 catch {
-  Write-Error "You have not installed the powershell modules. Please run run the Setup.ps1 found in the github repo"
+  Install-Module -Name Terminal-Icons -Force -SkipPublisherCheck -Scope CurrentUser
+  Install-Module -Name PSReadLine -Force -SkipPublisherCheck -Scope CurrentUser
+  Install-Module -Name PSFzf -Force -SkipPublisherCheck -Scope CurrentUser
 }
 
 # Initialize Zoxide

@@ -199,6 +199,14 @@ Catch {
   Write-Error "Failed to install PSReadLine module. Error: $_"
 }
 
+# PSFzf Install
+Try {
+  Install-Module PSFzf -Force
+}
+Catch {
+  Write-Error "Failed to install PSReadLine module. Error: $_"
+}
+
 # Zoxide Install
 Try {
   winget install -e --id ajeetdsouza.zoxide
