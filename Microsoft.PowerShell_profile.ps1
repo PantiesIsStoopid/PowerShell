@@ -59,23 +59,23 @@ Invoke-Expression (& { (zoxide init powershell | Out-String) })
 # Initialize Oh My Posh
 oh-my-posh init pwsh --config "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/DraculaGit.omp.json" | Invoke-Expression
 
-
 # List of required modules
 $modules = @("Terminal-Icons", "PSReadLine", "PSFzf")
 
 foreach ($module in $modules) {
+  # Try to import the module
   try {
-    # First attempt to import
     Import-Module -Name $module -ErrorAction Stop
+    Write-Host "$module imported successfully" -ForegroundColor Green
   }
   catch {
     Write-Host "$module not found. Installing..." -ForegroundColor Yellow
 
     # Install the module
-    Install-Module -Name $module -Repository PSGallery -Force
+    Install-Module -Name $module -Repository PSGallery -Scope CurrentUser -Force
 
+    # Try importing again after installation
     try {
-      # Second attempt to import after installation
       Import-Module -Name $module -ErrorAction Stop
       Write-Host "$module installed and imported successfully" -ForegroundColor Green
     }
