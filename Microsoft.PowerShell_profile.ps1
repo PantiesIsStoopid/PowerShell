@@ -88,6 +88,16 @@ foreach ($module in $modules) {
 Set-PSFzfOption -PSReadlineChordProvider "Ctrl+f" -PSReadlineChordReverseHistory "Ctrl+r"
 Set-PSReadLineKeyHandler -Chord Ctrl+g -ScriptBlock { Grep }
 
+$ENV:FZF_DEFAULT_OPTS=@"
+--color=fg:#f8f8f2,bg:#282a36,hl:#bd93f9
+--color=fg+:#f8f8f2,bg+:#44475a,hl+:#bd93f9
+--color=info:#ffb86c,prompt:#50fa7b,pointer:#ff79c6
+--color=marker:#ff79c6,spinner:#ffb86c,header:#6272a4
+--color=selected-bg:#44475a
+--multi
+"@
+
+
 Clear-Host
 
 # Run Fastfetch (Skip in VSCode)
