@@ -53,9 +53,7 @@ These functions help with file management and system utilities:
 - **Fe**: Opens File Explorer in your current directory.
 - **WinUtil**: Opens the Chris Titus Tech Windows utility.
 - **ReloadProfile**: Reloads your PowerShell profile to apply any changes.
-- **ClearRAM**: Cleans up the standby memory in RAM to improve performance.
 - **ReinstallWinget**: Uninstalls Winget and reinstalls it for better package management.
-- **CalcPi**: Calculates pi to 100 digits.
 - **Shutdown**: Shutdown your PC. Add `-Force` to force shutdown.
 - **RPassword <Length>**: Generates a random password of specified length.
 - **RandomFact**: Prints a random fun fact.

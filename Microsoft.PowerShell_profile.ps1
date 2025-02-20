@@ -23,7 +23,6 @@ function Update-Profile {
     Remove-Item "$env:temp/Microsoft.PowerShell_profile.ps1" -ErrorAction SilentlyContinue
   }
 }
-Update-Profile
 
 # Update PowerShell
 function Update-PowerShell {
@@ -51,7 +50,20 @@ function Update-PowerShell {
     Write-Error "Failed to update PowerShell. Error: $_"
   }
 }
-Update-PowerShell
+
+if ($global:canConnectToGitHub) {
+  Update-Profile
+  Update-PowerShell  
+}
+
+try {
+  Import-Module -Name Terminal-Icons -ErrorAction Stop
+  Import-Module -Name PSReadLine -ErrorAction Stop
+  Import-Module -Name PSFzf -ErrorAction Stop
+}
+catch {
+  Write-Error "You have not installed the powershell modules. Please run run the Setup.ps1 found in the github repo"
+}
 
 # Initialize Zoxide
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
@@ -59,46 +71,18 @@ Invoke-Expression (& { (zoxide init powershell | Out-String) })
 # Initialize Oh My Posh
 oh-my-posh init pwsh --config "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/DraculaGit.omp.json" | Invoke-Expression
 
-# List of required modules
-$modules = @("Terminal-Icons", "PSReadLine", "PSFzf")
-
-foreach ($module in $modules) {
-  # Try to import the module
-  try {
-    Import-Module -Name $module -ErrorAction Stop
-    Write-Host "$module imported successfully" -ForegroundColor Green
-  }
-  catch {
-    Write-Host "$module not found. Installing..." -ForegroundColor Yellow
-
-    # Install the module
-    Install-Module -Name $module -Repository PSGallery -Scope CurrentUser -Force
-
-    # Try importing again after installation
-    try {
-      Import-Module -Name $module -ErrorAction Stop
-      Write-Host "$module installed and imported successfully" -ForegroundColor Green
-    }
-    catch {
-      Write-Host "Failed to import $module after installation" -ForegroundColor Red
-    }
-  }
-}
-
+# Initialize Keybinds
 Set-PSFzfOption -PSReadlineChordProvider "Ctrl+f" -PSReadlineChordReverseHistory "Ctrl+r"
 Set-PSReadLineKeyHandler -Chord Ctrl+g -ScriptBlock { Grep }
 
-$ENV:FZF_DEFAULT_OPTS=@"
---color=fg:#f8f8f2,bg:#282a36,hl:#bd93f9
---color=fg+:#f8f8f2,bg+:#44475a,hl+:#bd93f9
+$ENV:FZF_DEFAULT_OPTS = @"
+--color=fg:#f8f8f2,hl:#bd93f9
+--color=fg+:#f8f8f2,hl+:#bd93f9
 --color=info:#ffb86c,prompt:#50fa7b,pointer:#ff79c6
 --color=marker:#ff79c6,spinner:#ffb86c,header:#6272a4
 --color=selected-bg:#44475a
 --multi
 "@
-
-
-Clear-Host
 
 # Run Fastfetch (Skip in VSCode)
 if ($Env:TERM_PROGRAM -ne "vscode") {
@@ -232,36 +216,6 @@ function SystemScan {
   Write-Host "Restoring original file permissions" -ForegroundColor Cyan
   icacls "C:\" /reset /t /c /l
   Write-Host "Restoring permissions completed successfully." -ForegroundColor Green
-}
-
-#* Function to clear system memory (not specifically standby RAM)
-function ClearRAM {
-  # Define URL and paths
-  $Url = "https://download.sysinternals.com/files/RAMMap.zip"
-  $zipPath = "C:\RAMMap.zip"
-  $extractPath = "C:\RAMMap"
-
-  # Download RAMMap
-  Invoke-WebRequest -Uri $Url -OutFile $zipPath
-
-  # Create extraction directory
-  if (-Not (Test-Path $extractPath)) {
-    New-Item -Path $extractPath -ItemType Directory | Out-Null
-  }
-
-  # Extract the ZIP file
-  Expand-Archive -Path $zipPath -DestinationPath $extractPath -Force
-
-  # Define the path to the executable
-  $exePath = "C:\RAMMap\RAMMap.exe"
-
-  # Run the executable and wait until it is closed
-  Write-Host "Please open the app click 'Empty' then 'Empty Standby List' Then close the app."
-  Start-Process -FilePath $exePath -Wait
-
-  # Clean up by deleting RAMMap files
-  Remove-Item -Path $zipPath -Force
-  Remove-Item -Path $extractPath -Recurse -Force
 }
 
 #*Reinstall winget
@@ -458,9 +412,7 @@ Utility Functions:
 - Fe: Opens File Explorer in your current directory.
 - WinUtil: Opens the Chris Titus Tech Windows utility.
 - ReloadProfile: Reloads the terminal profile.
-- ClearRAM: Cleans up the standby memory in RAM.
 - ReinstallWinget: Uninstalls Winget and reinstalls it.
-- CalcPi: Calculates pi to 100 digits.
 - Shutdown: Shutdown PC (-Force to force shutdown).
 - RPassword <Length>: Generates a random password of the specified length.
 - RandomFact: Prints a random fun fact.
@@ -489,4 +441,5 @@ Keybinds:
 CheatSheet: Displays a list of all the most common commands.
 
 Use 'ShowHelp' to display this help message.
-"@}
+"@
+}
