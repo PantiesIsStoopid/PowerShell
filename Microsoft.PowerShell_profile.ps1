@@ -433,14 +433,14 @@ Git Functions:
 - LazyInit <URL>: Adds all steps for initializing a repo and can add a remote URL.
 
 Additional Functions:
-- Grep: Launches an interactive file search using `fzf` and `bat` preview. Opens the selected file using the default editor.
+- Grep: Launches an interactive file search using fzf and bat preview. Opens the selected file using the default editor.
 - Touch: Creates a file in the current directory.
 - ShowHelp: Displays this help message.
 
 Keybinds:
-- Ctrl + F: opens fuzzy finder
-- Ctrl + R: fuzzy find through past command history
-- Ctrl + G: lets you grep in your current folder
+- Ctrl + F: Opens fuzzy finder.
+- Ctrl + R: Fuzzy find through past command history.
+- Ctrl + G: Lets you grep in your current folder.
 
 CheatSheet: Displays a list of all the most common commands.
 
