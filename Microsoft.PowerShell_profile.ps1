@@ -52,7 +52,7 @@ function Update-PowerShell {
 }
 
 if ($global:canConnectToGitHub) {
-  Update-Profile
+  # Update-Profile
   Update-PowerShell  
 }
 
@@ -77,7 +77,6 @@ oh-my-posh init pwsh --config "https://raw.githubusercontent.com/PantiesIsStoopi
 Set-PSFzfOption -PSReadlineChordProvider "Ctrl+f" -PSReadlineChordReverseHistory "Ctrl+r"
 
 Set-PSReadLineKeyHandler -Chord Ctrl+g -ScriptBlock { Grep }
-Set-PSReadLineKeyHandler -Chord Ctrl+y -ScriptBlock { RunYazi }
 
 $ENV:FZF_DEFAULT_OPTS = @"
 --color=fg:#f8f8f2,hl:#bd93f9
@@ -108,10 +107,6 @@ function Grep {
   $env:BAT_THEME = "Dracula"
   $file = fzf --preview "bat --style=numbers --color=always {}"
   if ($file) { Invoke-Item "$file" }
-}
-
-function RunYazi {
-  Yazi
 }
 
 #* List all files
