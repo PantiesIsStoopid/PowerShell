@@ -75,7 +75,9 @@ oh-my-posh init pwsh --config "https://raw.githubusercontent.com/PantiesIsStoopi
 
 # Initialize Keybinds
 Set-PSFzfOption -PSReadlineChordProvider "Ctrl+f" -PSReadlineChordReverseHistory "Ctrl+r"
+
 Set-PSReadLineKeyHandler -Chord Ctrl+g -ScriptBlock { Grep }
+Set-PSReadLineKeyHandler -Chord Ctrl+y -ScriptBlock { Yazi }
 
 $ENV:FZF_DEFAULT_OPTS = @"
 --color=fg:#f8f8f2,hl:#bd93f9
