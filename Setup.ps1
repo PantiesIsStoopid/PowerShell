@@ -233,17 +233,26 @@ Catch {
 }
 
 Try {
-  choco install bat
-  
-  mkdir -p "$(bat --config-dir)/themes"
+  # Install bat using Chocolatey
+  choco install bat -y
 
-  wget -P "$(bat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Latte.tmTheme
-  wget -P "$(bat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Frappe.tmTheme
-  wget -P "$(bat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Macchiato.tmTheme
-  wget -P "$(bat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Mocha.tmTheme
+  # Get bat config directory
+  $BatConfigDir = bat --config-dir | Out-String | Trim
+  $ThemeDir = Join-Path $BatConfigDir "themes"
 
+  # Ensure the themes directory exists
+  New-Item -ItemType Directory -Path $ThemeDir -Force
+
+  # Download themes
+  Invoke-WebRequest -Uri "https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Latte.tmTheme" -OutFile "$ThemeDir\Catppuccin Latte.tmTheme"
+  Invoke-WebRequest -Uri "https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Frappe.tmTheme" -OutFile "$ThemeDir\Catppuccin Frappe.tmTheme"
+  Invoke-WebRequest -Uri "https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Macchiato.tmTheme" -OutFile "$ThemeDir\Catppuccin Macchiato.tmTheme"
+  Invoke-WebRequest -Uri "https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Mocha.tmTheme" -OutFile "$ThemeDir\Catppuccin Mocha.tmTheme"
+
+  # Rebuild bat cache
   bat cache --build
-  Write-Host "bat installed successfully."
+
+  Write-Host "bat installed and themes applied successfully." -ForegroundColor Green
 }
 Catch {
   Write-Error "Failed to install bat. Error: $_"
