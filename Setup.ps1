@@ -237,7 +237,8 @@ Try {
   choco install bat -y
 
   # Get bat config directory
-  $BatConfigDir = bat --config-dir | Out-String | Trim
+  $BatConfigDir = (bat --config-dir | Out-String).Trim()
+
   $ThemeDir = Join-Path $BatConfigDir "themes"
 
   # Ensure the themes directory exists
