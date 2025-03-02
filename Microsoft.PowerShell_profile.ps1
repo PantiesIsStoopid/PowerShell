@@ -52,7 +52,7 @@ function Update-PowerShell {
 }
 
 if ($global:canConnectToGitHub) {
-  # Update-Profile
+  Update-Profile
   Update-PowerShell  
 }
 
@@ -71,7 +71,7 @@ catch {
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
 
 # Initialize Oh My Posh
-oh-my-posh init pwsh --config "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/Catppuccin.omp.json" | Invoke-Expression
+oh-my-posh init pwsh --config "C:\Users\Nyle\Desktop\Code\Github\PowerShell\Catppuccin.omp.json" | Invoke-Expression
 
 # Initialize Keybinds
 Set-PSFzfOption -PSReadlineChordProvider "Ctrl+f" -PSReadlineChordReverseHistory "Ctrl+r"
@@ -79,11 +79,10 @@ Set-PSFzfOption -PSReadlineChordProvider "Ctrl+f" -PSReadlineChordReverseHistory
 Set-PSReadLineKeyHandler -Chord Ctrl+g -ScriptBlock { Grep }
 
 $ENV:FZF_DEFAULT_OPTS = @"
---color=fg:#f8f8f2,hl:#bd93f9
---color=fg+:#f8f8f2,hl+:#bd93f9
---color=info:#ffb86c,prompt:#50fa7b,pointer:#ff79c6
---color=marker:#ff79c6,spinner:#ffb86c,header:#6272a4
---color=selected-bg:#44475a
+--color=bg+:#414559,bg:#303446,spinner:#f2d5cf,hl:#e78284
+--color=fg:#c6d0f5,header:#e78284,info:#ca9ee6,pointer:#f2d5cf
+--color=marker:#babbf1,fg+:#c6d0f5,prompt:#ca9ee6,hl+:#e78284
+--color=selected-bg:#51576d
 --multi
 "@
 
@@ -104,7 +103,6 @@ function Touch($file) {
 
 #* Let you search and preview files
 function Grep {
-  $env:BAT_THEME = "Dracula"
   $file = fzf --preview "bat --style=numbers --color=always {}"
   if ($file) { Invoke-Item "$file" }
 }

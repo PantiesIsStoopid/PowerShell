@@ -234,6 +234,7 @@ Catch {
 
 Try {
   choco install bat
+  
   Write-Host "bat installed successfully."
 }
 Catch {
