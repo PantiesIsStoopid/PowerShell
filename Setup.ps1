@@ -258,16 +258,16 @@ Else {
   Write-Host "Installation aborted."
 }
 
-# Ask the user if they want to install Dracula Theme
-$InstallDracula = Read-Host "Do you want to install Dracula Theme? (Y/N)"
+# Ask the user if they want to install Catppuccin Theme
+$InstallCatppuccin = Read-Host "Do you want to install Catppuccin Theme? (Y/N)"
 
-If ($InstallDracula -eq 'Y' -or $InstallDracula -eq 'y') {
+If ($InstallCatppuccin -eq 'Y' -or $InstallCatppuccin -eq 'y') {
   Try {
-    # Install dracula theme
-    Start-Process "https://draculatheme.com/windows-terminal"
+    # Install Catppuccin theme
+    Start-Process "https://github.com/catppuccin/windows-terminal"
   }
   Catch {
-    Write-Error "Failed to install Dracula Theme."
+    Write-Error "Failed to install Catppuccin Theme."
   }
 }
 Else {

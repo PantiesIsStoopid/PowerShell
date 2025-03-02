@@ -71,7 +71,7 @@ catch {
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
 
 # Initialize Oh My Posh
-oh-my-posh init pwsh --config "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/DraculaGit.omp.json" | Invoke-Expression
+oh-my-posh init pwsh --config "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/Catppuccin.omp.json" | Invoke-Expression
 
 # Initialize Keybinds
 Set-PSFzfOption -PSReadlineChordProvider "Ctrl+f" -PSReadlineChordReverseHistory "Ctrl+r"
