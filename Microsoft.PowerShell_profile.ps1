@@ -103,7 +103,8 @@ function Touch($file) {
 
 #* Let you search and preview files
 function Grep {
-  BAT_THEME="Catppuccin Frappe"
+  $env:BAT_THEME = "Catppuccin Frappe"
+
   $file = fzf --preview "bat --style=numbers --color=always {}"
   if ($file) { Invoke-Item "$file" }
 }
