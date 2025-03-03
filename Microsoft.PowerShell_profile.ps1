@@ -78,12 +78,12 @@ Set-PSFzfOption -PSReadlineChordProvider "Ctrl+f" -PSReadlineChordReverseHistory
 
 Set-PSReadLineKeyHandler -Chord Ctrl+g -ScriptBlock { Grep }
 
-$ENV:FZF_DEFAULT_OPTS = @"
---color=bg+:#414559,bg:#303446,spinner:#f2d5cf,hl:#e78284
---color=fg:#c6d0f5,header:#e78284,info:#ca9ee6,pointer:#f2d5cf
---color=marker:#babbf1,fg+:#c6d0f5,prompt:#ca9ee6,hl+:#e78284
---color=selected-bg:#51576d
---multi
+$ENV:FZF_DEFAULT_OPTS=@"
+--color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8
+--color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc
+--color=marker:#b4befe,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8
+--color=selected-bg:#45475a
+--color=border:#313244,label:#cdd6f4
 "@
 
 Clear-Host
@@ -103,7 +103,7 @@ function Touch($file) {
 
 #* Let you search and preview files
 function Grep {
-  $env:BAT_THEME = "Catppuccin Frappe"
+  $env:BAT_THEME = "Catppuccin Mocha"
 
   $file = fzf --preview "bat --style=numbers --color=always {}"
   if ($file) { Invoke-Item "$file" }
