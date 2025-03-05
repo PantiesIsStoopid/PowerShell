@@ -187,18 +187,6 @@ Try {
 Catch {
   Write-Error "Failed to install Terminal Icons module. Error: $_"
 }
-
-# PSReadLine Install
-Try {
-  Install-Module PSReadLine -Force
-  
-  Set-PSReadLineOption -PredictionSource History
-  Set-PSReadLineOption -PredictionViewStyle ListView
-}
-Catch {
-  Write-Error "Failed to install PSReadLine module. Error: $_"
-}
-
 # PSFzf Install
 Try {
   Install-Module PSFzf -Force

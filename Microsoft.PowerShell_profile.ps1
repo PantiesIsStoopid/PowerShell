@@ -56,16 +56,20 @@ if ($global:canConnectToGitHub) {
   Update-PowerShell  
 }
 
-try {
-  Import-Module -Name Terminal-Icons -ErrorAction Stop
-  Import-Module -Name PSReadLine -ErrorAction Stop
-  Import-Module -Name PSFzf -ErrorAction Stop
+$modules = @('Terminal-Icons', 'PSReadLine', 'PSFzf')
+
+foreach ($module in $modules) {
+  if (-not (Get-Module -ListAvailable -Name $module)) {
+    try {
+      Import-Module -Name $module -ErrorAction Stop
+    }
+    catch {
+      Write-Host "Module $module not found. Installing..."
+      Install-Module -Name $module -Force -SkipPublisherCheck -Scope CurrentUser
+    }
+  }
 }
-catch {
-  Install-Module -Name Terminal-Icons -Force -SkipPublisherCheck -Scope CurrentUser
-  Install-Module -Name PSReadLine -Force -SkipPublisherCheck -Scope CurrentUser
-  Install-Module -Name PSFzf -Force -SkipPublisherCheck -Scope CurrentUser
-}
+
 
 # Initialize Zoxide
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
