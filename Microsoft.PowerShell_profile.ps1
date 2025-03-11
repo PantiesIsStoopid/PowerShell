@@ -56,9 +56,9 @@ if ($global:canConnectToGitHub) {
   Update-PowerShell  
 }
 
-Import-Module -Name Terminal-Icons -ErrorAction SilentlyContinue
-Import-Module -Name PSReadLine -ErrorAction SilentlyContinue
-Import-Module -Name PSFzf -ErrorAction SilentlyContinue
+Import-Module Terminal-Icons
+Import-Module -Name PSReadLine 
+Import-Module -Name PSFzf
 
 # Initialize Zoxide
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
