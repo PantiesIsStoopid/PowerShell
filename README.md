@@ -98,7 +98,3 @@ This setup can be installed effortlessly via the following one-liner:
 irm "https://github.com/PantiesIsStoopid/PowerShell/raw/main/Setup.ps1" | iex
 ```
 
-```
-
-Let me know if you'd like any changes!
-```
