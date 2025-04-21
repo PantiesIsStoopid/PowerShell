@@ -22,33 +22,27 @@
           "type": "os"
         },
         {
-          "background": "p:blue",
+          "background": "p:pink",
           "foreground": "p:text",
-          "powerline_symbol": "\ue0b4",
-          "style": "diamond",
-          "template": "{{ .UserName }}",
-          "type": "session"
-        },
-        {
-          "background": "p:lavender",
-          "foreground": "p:white",
-          "powerline_symbol": "\ue0b0",
-          "style": "powerline",
           "properties": {
-            "style": "folder"
+            "folder_icon": "..\ue5fe..",
+            "home_icon": "~",
+            "style": "agnoster_short"
           },
-          "template": " {{ .Folder }} ",
+          "powerline_symbol": "\ue0b4",
+          "style": "powerline",
+          "template": " {{ .Path }}",
           "type": "path"
         },
         {
-          "background": "#89B4FA",
+          "background": "p:lavender",
+          "foreground": "p:text",
           "background_templates": [
             "{{ if or (.Working.Changed) (.Staging.Changed) }}#FAB387{{ end }}",
             "{{ if and (gt .Ahead 0) (gt .Behind 0) }}#F5C2E7{{ end }}",
             "{{ if gt .Ahead 0 }}#A6E3A1{{ end }}",
             "{{ if gt .Behind 0 }}#F38BA8{{ end }}"
           ],
-          "foreground": "#1E1E2E",
           "style": "powerline",
           "properties": {
             "branch_icon": "\ue725 ",
