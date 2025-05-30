@@ -114,8 +114,6 @@ function Time {
   Write-Host "`n⏱️  Duration: $($Duration.ToString())"
 }
 
-Set-Alias time Time
-
 #* List all files
 function La {
   Get-ChildItem
