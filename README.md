@@ -1,100 +1,131 @@
-# PowerShell Profile Setup Documentation
-
-This guide explains the features and usage of a custom PowerShell profile designed to improve system navigation, information gathering, maintenance, and Git management. The profile includes multiple aliases for various tasks, along with system utilities and Git functions.
+# Custom PowerShell Profile
 
 ## Installation
 
-To install this custom PowerShell profile, run the following command in your PowerShell terminal:
+Run this in your PowerShell terminal to install the profile:
 
 ```powershell
 irm "https://github.com/PantiesIsStoopid/PowerShell/raw/main/Setup.ps1" | iex
 ```
 
-This command will download and execute the PowerShell script that sets up your profile, including aliases, themes, and utility functions.
+This downloads and runs the setup script which configures aliases, themes, and utility functions.
 
-## Directory Navigation Aliases
+---
 
-These aliases provide shortcuts for commonly used directories:
+## Functions Documentation
 
-- **Touch**: Creates a file in your current directory (`Touch FileName.txt`).
-- **Docs**: Changes the directory to your user’s Documents folder.
-- **Dtop**: Changes the directory to your user’s Desktop folder.
-- **DLoads**: Changes the directory to your user’s Downloads folder.
-- **Home**: Changes the directory to your user’s home folder.
-- **Root**: Changes the directory to the C: drive.
+### Update-Profile
 
-## File and System Information Aliases
+Downloads the latest PowerShell profile from GitHub and updates your local profile if there are changes.
 
-These aliases help retrieve system information and manage files:
+### Update-PowerShell
 
-- **La**: Lists all files in the current directory with detailed formatting.
-- **Ll**: Lists all files, including hidden files, in the current directory with detailed formatting.
-- **SysInfo**: Displays detailed system information (CPU, memory, OS version, etc.).
-- **GetPrivIP**: Retrieves the private IP address of your machine.
-- **GetPubIP**: Retrieves the public IP address of your machine.
-  - Add `-IncIPv6` to include the IPv6 address as well.
-- **SpeedTest**: Runs a speed test for your internet connection.
+Checks the latest PowerShell version from GitHub and updates your PowerShell using winget if a newer version exists.
 
-## System Maintenance Aliases
+### Touch
 
-These aliases assist with routine maintenance tasks:
+Creates a new empty file with the specified name.
 
-- **FlushDNS**: Clears the DNS cache to resolve DNS-related issues.
-- **DelCmdHistory**: Deletes all history of commands done in PowerShell.
-- **SystemScan**: Runs a DISM and SFC scan to repair system files and the Windows image.
-- **Update**: Updates all known applications on your system.
-- **EmptyBin**: Empties the Recycling Bin.
-- **ClearCache**: Clears Windows system caches to free up disk space.
+### Grep
 
-## Utility Functions
+Launches `fzf` fuzzy finder to search files with a preview using `bat`, then opens the selected file.
 
-These functions help with file management and system utilities:
+### Time
 
-- **Fe**: Opens File Explorer in your current directory.
-- **WinUtil**: Opens the Chris Titus Tech Windows utility.
-- **ReloadProfile**: Reloads your PowerShell profile to apply any changes.
-- **ReinstallWinget**: Uninstalls Winget and reinstalls it for better package management.
-- **Shutdown**: Shutdown your PC. Add `-Force` to force shutdown.
-- **RPassword <Length>**: Generates a random password of specified length.
-- **RandomFact**: Prints a random fun fact.
+Measures and prints the duration it takes to run a given script block.
 
-## Git Management Aliases
+### La
 
-These aliases simplify Git commands for your workflow:
+Lists all files and folders in the current directory.
 
-- **GL**: Shortcut for `git log`.
-- **GS**: Shortcut for `git status`.
-- **GA**: Shortcut for `git add .`.
-- **GC <message>**: Shortcut for `git commit -m "message"`.
-- **GP**: Shortcut for `git push`.
-- **G**: Changes to your GitHub directory.
-- **GCom <message>**: Adds all changes and commits with a specified message.
-- **LazyG <message>**: Adds all changes, commits with a message, and pushes to the remote repository.
-- **LazyInit <URL>**: Initializes a Git repository, adds all files, commits, and sets the remote URL.
+### Ll
 
-## Keybinds
+Lists all files and folders, including hidden ones, in a formatted table.
 
-- **Ctrl + F**: opens fuzzy finder
-- **Ctrl + R**: fuzzy find through past command history
-- **Ctrl + G**: lets you grep in your current folder
+### FlushDNS
 
-## CheatSheet
+Clears the DNS client cache.
 
-Use the **CheatSheet** alias to display a list of all the most common commands in this PowerShell profile.
+### DelCmdHistory
 
-## Custom Oh-My-Posh Theme & FastFetch Theme
+Clears PowerShell command history and removes the history file.
 
-The profile is pre-configured with a custom **Oh-My-Posh** theme to enhance the appearance of the PowerShell terminal, along with a **FastFetch** theme to provide efficient system stats and directory information.
+### GetPubIP
 
-## Opt-Out of Telemetry
+Fetches and prints the public IP address.
 
-The setup script ensures that any telemetry or data collection services are opted out to enhance privacy.
+### GetPrivIP
 
-## Easy Install Script
+Prints private IP addresses (IPv4 by default, IPv6 if `-IncIPv6` is set).
 
-This setup can be installed effortlessly via the following one-liner:
+### SpeedTest
 
-```powershell
-irm "https://github.com/PantiesIsStoopid/PowerShell/raw/main/Setup.ps1" | iex
-```
+Runs an internet speed test and pings common public DNS servers.
 
+### Fe
+
+Opens the current directory in File Explorer.
+
+### Update
+
+Updates PowerShell, Chocolatey packages, and runs Windows updates.
+
+### WinUtil
+
+Launches the Chris Titus Tech Windows utility script.
+
+### ReloadProfile
+
+Reloads your PowerShell profile.
+
+### SystemScan
+
+Runs DISM and SFC system file integrity scans, then resets permissions on `C:\`.
+
+### ReinstallWinget
+
+Uninstalls and reinstalls Winget package manager.
+
+### EmptyBin
+
+Empties the Windows Recycle Bin using cleanmgr.
+
+### Shutdown
+
+Shuts down the PC gracefully or forcefully if `-Force` is specified.
+
+### RPassword
+
+Generates a random password of a specified length.
+
+### RandomFact
+
+Fetches and prints a random fun fact from a public API.
+
+### ClearCache
+
+Clears temporary files, system cache, IE cache, and Microsoft Edge cache.
+
+---
+
+## Git Shortcuts
+
+* `GL` — git log
+* `GS` — git status
+* `GA` — git add .
+* `GC <msg>` — git commit -m "<msg>"
+* `GP` — git push
+* `GCL <url>` — git clone <url>
+* `GCom <msg>` — git add ., git commit -m "<msg>"
+* `LazyG <msg>` — add, commit, and push
+* `LazyInit <url>` — initialize repo, add remote, push
+
+---
+
+## Help and Cheatsheet
+
+* `ShowHelp` — displays help message describing functions and usage
+* `CheatSheet` — displays basic PowerShell command cheatsheet
+  \`\`
+
+Let me know if you want me to add or tweak anything.
