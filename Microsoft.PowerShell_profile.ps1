@@ -102,6 +102,20 @@ function Grep {
   if ($file) { Invoke-Item "$file" }
 }
 
+#* Calculate the time taken to run a script block
+function Time {
+  param([ScriptBlock]$Script)
+
+  $Start = Get-Date
+  & $Script
+  $End = Get-Date
+
+  $Duration = $End - $Start
+  Write-Host "`n⏱️  Duration: $($Duration.ToString())"
+}
+
+Set-Alias time Time
+
 #* List all files
 function La {
   Get-ChildItem
@@ -430,6 +444,7 @@ Additional Functions:
 - Grep: Launches an interactive file search using fzf and bat preview. Opens the selected file using the default editor.
 - Touch: Creates a file in the current directory.
 - ShowHelp: Displays this help message.
+- Time <ScriptBlock>: Measures the execution time of a script block.
 
 Keybinds:
 - Ctrl + F: Opens fuzzy finder.
