@@ -65,6 +65,8 @@ oh-my-posh init pwsh --config "https://raw.githubusercontent.com/PantiesIsStoopi
 
 Set-PSFzfOption -PSReadlineChordProvider "Ctrl+f" -PSReadlineChordReverseHistory "Ctrl+r"
 
+clear 
+
 fastfetch --config "$HOME\Documents\Powershell\FastConfig.jsonc"
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------------
