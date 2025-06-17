@@ -73,6 +73,15 @@ fastfetch --config "$HOME\Documents\Powershell\FastConfig.jsonc"
 
 function Touch($file) { "" | Out-File $file -Encoding ASCII }
 
+function Time {
+  param([ScriptBlock]$Script)
+  $Start = Get-Date
+  & $Script
+  $End = Get-Date
+  $Duration = $End - $Start
+  Write-Host "`n⏱️  Duration: $($Duration.ToString())"
+}
+
 function La { Get-ChildItem }
 
 function Ll { Get-ChildItem -Path . -Force | Format-Table -AutoSize }
