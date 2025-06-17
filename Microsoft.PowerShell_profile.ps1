@@ -65,6 +65,10 @@ oh-my-posh init pwsh --config "https://raw.githubusercontent.com/PantiesIsStoopi
 
 Set-PSFzfOption -PSReadlineChordProvider "Ctrl+f" -PSReadlineChordReverseHistory "Ctrl+r"
 
+fastfetch --config "$HOME\Documents\Powershell\FastConfig.jsonc"
+
+# -------------------------------------------------------------------------------------------------------------------------------------------------------
+
 function Touch($file) { "" | Out-File $file -Encoding ASCII }
 
 function La { Get-ChildItem }
