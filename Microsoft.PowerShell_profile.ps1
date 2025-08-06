@@ -61,7 +61,7 @@ Import-Module -Name PSReadLine
 Import-Module -Name PSFzf
 
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
-oh-my-posh init pwsh --config "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/Catppuccin.omp.json" | Invoke-Expression
+oh-my-posh init pwsh --config "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/OneDarkPro.omp.json" | Invoke-Expression
 
 Set-PSFzfOption -PSReadlineChordProvider "Ctrl+f" -PSReadlineChordReverseHistory "Ctrl+r"
 
