@@ -2,62 +2,69 @@
 $global:canConnectToGitHub = Test-Connection github.com -Count 1 -Quiet -TimeoutSeconds 1
 
 # Update PowerShell Profile
-function Update-Profile {
-  try {
+function Update-Profile
+{
+  try
+  {
     $Url = "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/Microsoft.PowerShell_profile.ps1"
     $oldhash = Get-FileHash $PROFILE
     Invoke-RestMethod $url -OutFile "$env:temp/Microsoft.PowerShell_profile.ps1"
     $newhash = Get-FileHash "$env:temp/Microsoft.PowerShell_profile.ps1"
-    if ($newhash.Hash -ne $oldhash.Hash) {
+    if ($newhash.Hash -ne $oldhash.Hash)
+    {
       Copy-Item -Path "$env:temp/Microsoft.PowerShell_profile.ps1" -Destination $PROFILE -Force
       Write-Host "Profile has been updated. Please restart your shell to reflect changes" -ForegroundColor Magenta
-    }
-    else {
+    } else
+    {
       Write-Host "Profile is up to date." -ForegroundColor Green
     }
-  }
-  catch {
+  } catch
+  {
     Write-Error "Unable to check for `$profile updates: $_"
-  }
-  finally {
+  } finally
+  {
     Remove-Item "$env:temp/Microsoft.PowerShell_profile.ps1" -ErrorAction SilentlyContinue
   }
 }
 
 # Update PowerShell
-function Update-PowerShell {
-  try {
+function Update-PowerShell
+{
+  try
+  {
     Write-Host "Checking for PowerShell updates..." -ForegroundColor Cyan
     $updateNeeded = $false
     $currentVersion = $PSVersionTable.PSVersion.ToString()
     $gitHubApiUrl = "https://api.github.com/repos/PowerShell/PowerShell/releases/latest"
     $latestReleaseInfo = Invoke-RestMethod -Uri $gitHubApiUrl
     $latestVersion = $latestReleaseInfo.tag_name.Trim('v')
-    if ($currentVersion -lt $latestVersion) {
-      $updateNeeded = $true
+    if ($currentVersion -lt $latestVersion)
+    { $updateNeeded = $true 
     }
 
-    if ($updateNeeded) {
+    if ($updateNeeded)
+    {
       Write-Host "Updating PowerShell..." -ForegroundColor Yellow
       Start-Process powershell.exe -ArgumentList "-NoProfile -Command winget upgrade Microsoft.PowerShell --accept-source-agreements --accept-package-agreements" -Wait -NoNewWindow
       Write-Host "PowerShell has been updated. Please restart your shell to reflect changes" -ForegroundColor Magenta
-    }
-    else {
+    } else
+    {
       Write-Host "Your PowerShell is up to date." -ForegroundColor Green
     }
-  }
-  catch {
+  } catch
+  {
     Write-Error "Failed to update PowerShell. Error: $_"
   }
 }
 
-if ($global:canConnectToGitHub) {
+if ($global:canConnectToGitHub)
+{
   Update-Profile
   Update-PowerShell  
 }
 
 Import-Module Terminal-Icons
-Import-Module -Name PSReadLine 
+Import-Module -Name PSReadLine
 Import-Module -Name PSFzf
 
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
@@ -65,15 +72,26 @@ oh-my-posh init pwsh --config "https://raw.githubusercontent.com/PantiesIsStoopi
 
 Set-PSFzfOption -PSReadlineChordProvider "Ctrl+f" -PSReadlineChordReverseHistory "Ctrl+r"
 
-clear 
+$ENV:FZF_DEFAULT_OPTS = @"
+--color=bg+:#3E4451,bg:#282C34,spinner:#C678DD,hl:#E06C75
+--color=fg:#ABB2BF,header:#E06C75,info:#61AFEF,pointer:#C678DD
+--color=marker:#98C379,fg+:#ABB2BF,prompt:#61AFEF,hl+:#E06C75
+--color=selected-bg:#4B5263
+--color=border:#5C6370,label:#ABB2BF
+"@
 
+Clear-Host
 fastfetch --config "$HOME\Documents\Powershell\FastConfig.jsonc"
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------------
 
-function Touch($file) { "" | Out-File $file -Encoding ASCII }
+function Touch($File)
+{ 
+  "" | Out-File $File -Encoding ASCII 
+}
 
-function Time {
+function Time
+{
   param([ScriptBlock]$Script)
   $Start = Get-Date
   & $Script
@@ -82,131 +100,106 @@ function Time {
   Write-Host "`n⏱️  Duration: $($Duration.ToString())"
 }
 
-function La { Get-ChildItem }
+function Ll
+{
+  Get-ChildItem -Path . -Force | Format-Table -AutoSize 
+}
 
-function Ll { Get-ChildItem -Path . -Force | Format-Table -AutoSize }
-
-function SpeedTest {  
+function SpeedTest
+{
   Write-Host "Running Speedtest" -ForegroundColor Cyan
   Invoke-RestMethod asheroto.com/speedtest | Invoke-Expression
   Write-Host "Pinging 1.1.1.1" -ForegroundColor Cyan
   ping 1.1.1.1
-  Write-Host "Pinging 8.8.8.8" -ForegroundColor Cyan
-  ping 8.8.8.8
 }
 
-function FlushDNS {
-  Clear-DnsClientCache
-  Write-Host "DNS has been flushed" -ForegroundColor Green
-}
-
-function SystemScan {
+function SystemScan
+{
   Write-Host "Starting DISM scan..." -ForegroundColor Cyan
-  try {
+  try
+  {
     dism /online /cleanup-image /checkhealth
     dism /online /cleanup-image /scanhealth
     dism /online /cleanup-image /restorehealth
     Write-Host "DISM scan completed successfully." -ForegroundColor Green
-  }
-  catch {
+  } catch
+  {
     Write-Host "DISM scan failed: $_" -ForegroundColor Red
   }
 
   Write-Host "Starting SFC scan..." -ForegroundColor Cyan
-  try {
+  try
+  {
     sfc /scannow
     Write-Host "SFC scan completed successfully." -ForegroundColor Green
-  }
-  catch {
+  } catch
+  {
     Write-Host "SFC scan failed: $_" -ForegroundColor Red
   }
 
   Write-Host "Restoring original file permissions" -ForegroundColor Cyan
   icacls "C:\" /reset /t /c /l
-  Write-Host "Restoring permissions completed successfully." -ForegroundColor Green
+  Write-Host "Restoring permissions completed successfully" -ForegroundColor Green
 }
 
-function Update {
-  winget upgrade "Microsoft.PowerShell" --accept-source-agreements --accept-package-agreements
-  choco upgrade chocolatey -Y
-  choco upgrade all -Y
-  Install-Module -Name PSWindowsUpdate -Force -Scope CurrentUser
-  Get-WindowsUpdate
+function Fe
+{
+  Invoke-Item (Get-Location) 
 }
 
-function Fe {
-  Invoke-Item (Get-Location)
+function WinUtil
+{
+  Invoke-WebRequest -UseBasicParsing https://christitus.com/win | Invoke-Expression 
 }
 
-function WinUtil {
-  Invoke-WebRequest -useb https://christitus.com/win | Invoke-Expression
-}
-
-function ReloadProfile {
-  & $profile
-}
-
-function Shutdown {
-  param ([switch]$Force)
-
-  if ($Force) {
-    Stop-Computer -Force -Confirm:$false
+function RPassword
+{
+  param ([Parameter(Mandatory)][int] $Length)
+  $CharSet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.ToCharArray()
+  $Rng = New-Object System.Security.Cryptography.RNGCryptoServiceProvider
+  $Bytes = New-Object byte[]($Length)
+  $Rng.GetBytes($Bytes)
+  $Result = New-Object char[]($Length)
+  for ($i = 0; $i -lt $Length; $i++)
+  { $Result[$i] = $CharSet[$Bytes[$i] % $CharSet.Length] 
   }
-  else {
-    Stop-Computer -Confirm:$false
-  }
+  return (-join $Result)
 }
 
-function RPassword {
-  param ([Parameter(Mandatory)][int] $length)
-
-  $charSet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.ToCharArray()
-  $rng = New-Object System.Security.Cryptography.RNGCryptoServiceProvider
-  $bytes = New-Object byte[]($length)
-  $rng.GetBytes($bytes)
-  $result = New-Object char[]($length)
-
-  for ($i = 0 ; $i -lt $length ; $i++) {
-    $result[$i] = $charSet[$bytes[$i] % $charSet.Length]
-  }
-
-  return (-join $result)
+function GL
+{
+  git log 
+}
+function GS
+{
+  git status 
+}
+function GA
+{
+  git add . 
+}
+function GC
+{
+  param($m) git commit -m "$m" 
+}
+function GP
+{
+  git push 
 }
 
-function GL { git log }
-
-function GS { git status }
-
-function GA { git add . }
-
-function GC { param($m) git commit -m "$m" }
-
-function GP { git push }
-
-function G { __zoxide_z github }
-
-function GCom {
-  git add .
-  git commit -m "$args"
+function GCom
+{
+  git add .; git commit -m "$args" 
 }
 
-function LazyG {
-  git add .
-  git commit -m "$args"
-  git push
-}
-
-function LazyInit {
-  git init
-  git add .
-  git commit -m "first commit"
-  git branch -M master
-  git remote add origin $args
-  git push -u origin master
+function LazyG
+{
+  git add .; git commit -m "$args"; git push 
 }
 
 #* Help Function
-function ShowHelp {
+function ShowHelp
+{
   @"
 PowerShell Profile Help
 =======================
