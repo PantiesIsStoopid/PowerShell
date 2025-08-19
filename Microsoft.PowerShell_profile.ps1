@@ -44,6 +44,15 @@ function UpdateProfile
   }
 }
 
+function InstallModules
+{
+
+  Install-Module Terminal-Icons -Scope CurrentUser -Force
+  Install-Module PSFzf -Scope CurrentUser -Force
+  Install-Module PSReadLine -Scope CurrentUser -Force
+  
+}
+
 # Update PowerShell
 function UpdatePowerShell
 {
@@ -72,11 +81,12 @@ if (ShouldUpdateToday)
   UpdateProfile
   UpdatePowerShell
   MarkUpdateChecked
+  InstallModules
 }
 
 Import-Module Terminal-Icons
-Import-Module PSReadLine
 Import-Module PSFzf
+Import-Module PSReadLine
 
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
 oh-my-posh init pwsh --config "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/OneDarkPro.omp.json" | Invoke-Expression
