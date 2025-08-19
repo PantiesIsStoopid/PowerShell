@@ -1,71 +1,82 @@
-# Check GitHub connectivity (1s timeout)
-$global:canConnectToGitHub = Test-Connection github.com -Count 1 -Quiet -TimeoutSeconds 1
+# Path to store last update check
+$global:UpdateCheckFile = Join-Path $env:TEMP "LastUpdateCheck.txt"
+
+# Check if we should update today
+function ShouldUpdateToday
+{
+  if (-Not (Test-Path $global:UpdateCheckFile))
+  { return $true 
+  }
+  $LastCheck = Get-Content $global:UpdateCheckFile
+  return ($LastCheck -ne (Get-Date).ToString('yyyy-MM-dd'))
+}
+
+# Mark that we've checked for updates
+function MarkUpdateChecked
+{
+  (Get-Date).ToString('yyyy-MM-dd') | Set-Content $global:UpdateCheckFile
+}
 
 # Update PowerShell Profile
-function Update-Profile
+function UpdateProfile
 {
   try
   {
     $Url = "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/Microsoft.PowerShell_profile.ps1"
-    $oldhash = Get-FileHash $PROFILE
-    Invoke-RestMethod $url -OutFile "$env:temp/Microsoft.PowerShell_profile.ps1"
-    $newhash = Get-FileHash "$env:temp/Microsoft.PowerShell_profile.ps1"
-    if ($newhash.Hash -ne $oldhash.Hash)
+    $TempFile = Join-Path $env:TEMP "Microsoft.PowerShell_profile.ps1"
+    $OldHash = Get-FileHash $PROFILE
+    Invoke-RestMethod $Url -OutFile $TempFile
+    $NewHash = Get-FileHash $TempFile
+    if ($NewHash.Hash -ne $OldHash.Hash)
     {
-      Copy-Item -Path "$env:temp/Microsoft.PowerShell_profile.ps1" -Destination $PROFILE -Force
-      Write-Host "Profile has been updated. Please restart your shell to reflect changes" -ForegroundColor Magenta
+      Copy-Item $TempFile -Destination $PROFILE -Force
+      Write-Host "Profile updated. Restart shell to apply changes." -ForegroundColor Magenta
     } else
     {
       Write-Host "Profile is up to date." -ForegroundColor Green
     }
   } catch
   {
-    Write-Error "Unable to check for `$profile updates: $_"
+    Write-Error "Unable to update profile: $_"
   } finally
   {
-    Remove-Item "$env:temp/Microsoft.PowerShell_profile.ps1" -ErrorAction SilentlyContinue
+    Remove-Item $TempFile -ErrorAction SilentlyContinue
   }
 }
 
 # Update PowerShell
-function Update-PowerShell
+function UpdatePowerShell
 {
   try
   {
-    Write-Host "Checking for PowerShell updates..." -ForegroundColor Cyan
-    $updateNeeded = $false
-    $currentVersion = $PSVersionTable.PSVersion.ToString()
-    $gitHubApiUrl = "https://api.github.com/repos/PowerShell/PowerShell/releases/latest"
-    $latestReleaseInfo = Invoke-RestMethod -Uri $gitHubApiUrl
-    $latestVersion = $latestReleaseInfo.tag_name.Trim('v')
-    if ($currentVersion -lt $latestVersion)
-    { $updateNeeded = $true 
-    }
-
-    if ($updateNeeded)
+    $CurrentVersion = $PSVersionTable.PSVersion.ToString()
+    $LatestVersion = (Invoke-RestMethod "https://api.github.com/repos/PowerShell/PowerShell/releases/latest").tag_name.Trim('v')
+    if ($CurrentVersion -lt $LatestVersion)
     {
       Write-Host "Updating PowerShell..." -ForegroundColor Yellow
       Start-Process powershell.exe -ArgumentList "-NoProfile -Command winget upgrade Microsoft.PowerShell --accept-source-agreements --accept-package-agreements" -Wait -NoNewWindow
-      Write-Host "PowerShell has been updated. Please restart your shell to reflect changes" -ForegroundColor Magenta
+      Write-Host "PowerShell updated. Restart shell to apply changes." -ForegroundColor Magenta
     } else
     {
-      Write-Host "Your PowerShell is up to date." -ForegroundColor Green
+      Write-Host "PowerShell is up to date." -ForegroundColor Green
     }
   } catch
   {
-    Write-Error "Failed to update PowerShell. Error: $_"
+    Write-Error "Failed to update PowerShell: $_"
   }
 }
 
-if ($global:canConnectToGitHub)
+# Run updates once per day
+if (ShouldUpdateToday)
 {
-  Update-Profile
-  Update-PowerShell  
+  UpdateProfile
+  UpdatePowerShell
+  MarkUpdateChecked
 }
 
-Import-Module Terminal-Icons
-Import-Module -Name PSReadLine
-Import-Module -Name PSFzf
+# Load modules in parallel
+$modules = @("Terminal-Icons", "PSReadLine", "PSFzf")
+$modules | ForEach-Object -Parallel { Import-Module $_ }
 
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
 oh-my-posh init pwsh --config "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/OneDarkPro.omp.json" | Invoke-Expression
@@ -251,3 +262,4 @@ CheatSheet: Displays a list of all the most common commands.
 Use 'ShowHelp' to display this help message.
 "@
 }
+
