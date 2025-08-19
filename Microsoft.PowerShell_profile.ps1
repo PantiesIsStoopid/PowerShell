@@ -74,9 +74,9 @@ if (ShouldUpdateToday)
   MarkUpdateChecked
 }
 
-# Load modules in parallel
-$modules = @("Terminal-Icons", "PSReadLine", "PSFzf")
-$modules | ForEach-Object -Parallel { Import-Module $_ }
+Import-Module Terminal-Icons
+Import-Module PSReadLine
+Import-Module PSFzf
 
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
 oh-my-posh init pwsh --config "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/OneDarkPro.omp.json" | Invoke-Expression
