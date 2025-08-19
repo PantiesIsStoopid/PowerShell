@@ -46,11 +46,9 @@ function UpdateProfile
 
 function InstallModules
 {
-
   Install-Module Terminal-Icons -Scope CurrentUser -Force
   Install-Module PSFzf -Scope CurrentUser -Force
   Install-Module PSReadLine -Scope CurrentUser -Force
-  
 }
 
 # Update PowerShell
