@@ -1,93 +1,67 @@
 # Path to store last update check
 $global:UpdateCheckFile = Join-Path $env:TEMP "LastUpdateCheck.txt"
 
-# Check if we should update today
-function ShouldUpdateToday
-{
-  if (-Not (Test-Path $global:UpdateCheckFile))
-  { return $true 
-  }
+function ShouldUpdateToday {
+  if (-Not (Test-Path $global:UpdateCheckFile)) { return $true }
   $LastCheck = Get-Content $global:UpdateCheckFile
   return ($LastCheck -ne (Get-Date).ToString('yyyy-MM-dd'))
 }
 
-# Mark that we've checked for updates
-function MarkUpdateChecked
-{
+function MarkUpdateChecked {
   (Get-Date).ToString('yyyy-MM-dd') | Set-Content $global:UpdateCheckFile
 }
 
-# Update PowerShell Profile
-function UpdateProfile
-{
-  try
-  {
+function UpdateProfile {
+  try {
     $Url = "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/Microsoft.PowerShell_profile.ps1"
     $TempFile = Join-Path $env:TEMP "Microsoft.PowerShell_profile.ps1"
     $OldHash = Get-FileHash $PROFILE
     Invoke-RestMethod $Url -OutFile $TempFile
     $NewHash = Get-FileHash $TempFile
-    if ($NewHash.Hash -ne $OldHash.Hash)
-    {
+    if ($NewHash.Hash -ne $OldHash.Hash) {
       Copy-Item $TempFile -Destination $PROFILE -Force
       Write-Host "Profile updated. Restart shell to apply changes." -ForegroundColor Magenta
-    } else
-    {
-      Write-Host "Profile is up to date." -ForegroundColor Green
     }
-  } catch
-  {
-    Write-Error "Unable to update profile: $_"
-  } finally
-  {
+  } catch { Write-Verbose "Update failed: $_" } finally {
     Remove-Item $TempFile -ErrorAction SilentlyContinue
   }
 }
 
-function InstallModules
-{
-  Install-Module Terminal-Icons -Scope CurrentUser -Force
-  Install-Module PSFzf -Scope CurrentUser -Force
-  Install-Module PSReadLine -Scope CurrentUser -Force
-}
-
-# Update PowerShell
-function UpdatePowerShell
-{
-  try
-  {
+function UpdatePowerShell {
+  try {
     $CurrentVersion = $PSVersionTable.PSVersion.ToString()
     $LatestVersion = (Invoke-RestMethod "https://api.github.com/repos/PowerShell/PowerShell/releases/latest").tag_name.Trim('v')
-    if ($CurrentVersion -lt $LatestVersion)
-    {
-      Write-Host "Updating PowerShell..." -ForegroundColor Yellow
-      Start-Process powershell.exe -ArgumentList "-NoProfile -Command winget upgrade Microsoft.PowerShell --accept-source-agreements --accept-package-agreements" -Wait -NoNewWindow
-      Write-Host "PowerShell updated. Restart shell to apply changes." -ForegroundColor Magenta
-    } else
-    {
-      Write-Host "PowerShell is up to date." -ForegroundColor Green
+    if ($CurrentVersion -lt $LatestVersion) {
+      Start-Process powershell.exe -ArgumentList "-NoProfile -Command winget upgrade Microsoft.PowerShell --accept-source-agreements --accept-package-agreements" -NoNewWindow
     }
-  } catch
-  {
-    Write-Error "Failed to update PowerShell: $_"
-  }
+  } catch { Write-Verbose "Failed to check PowerShell update: $_" }
 }
 
-# Run updates once per day
-if (ShouldUpdateToday)
-{
-  UpdateProfile
-  UpdatePowerShell
-  MarkUpdateChecked
-  InstallModules
+# Run updates in background (non-blocking)
+if (ShouldUpdateToday) {
+  Start-Job {
+    UpdateProfile
+    UpdatePowerShell
+    MarkUpdateChecked
+  } | Out-Null
 }
 
-Import-Module Terminal-Icons
-Import-Module PSFzf
-Import-Module PSReadLine
+# Lazy import modules
+if (-not (Get-Module -ListAvailable -Name Terminal-Icons)) { Install-Module Terminal-Icons -Scope CurrentUser -Force }
+if (-not (Get-Module -ListAvailable -Name PSFzf)) { Install-Module PSFzf -Scope CurrentUser -Force }
+if (-not (Get-Module -ListAvailable -Name PSReadLine)) { Install-Module PSReadLine -Scope CurrentUser -Force }
+
+Import-Module Terminal-Icons -ErrorAction SilentlyContinue
+Import-Module PSFzf -ErrorAction SilentlyContinue
+Import-Module PSReadLine -ErrorAction SilentlyContinue
 
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
-oh-my-posh init pwsh --config "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/OneDarkPro.omp.json" | Invoke-Expression
+
+$OmpConfig = "$env:TEMP\OneDarkPro.omp.json"
+if (-not (Test-Path $OmpConfig)) {
+  Invoke-WebRequest "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/OneDarkPro.omp.json" -OutFile $OmpConfig
+}
+oh-my-posh init pwsh --config $OmpConfig | Invoke-Expression
 
 Set-PSFzfOption -PSReadlineChordProvider "Ctrl+f" -PSReadlineChordReverseHistory "Ctrl+r"
 
@@ -99,7 +73,7 @@ $ENV:FZF_DEFAULT_OPTS = @"
 --color=border:#5C6370,label:#ABB2BF
 "@
 
-Clear-Host
+# Keep fastfetch, but don’t clear screen
 fastfetch --config "$HOME\Documents\Powershell\FastConfig.jsonc"
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------------
