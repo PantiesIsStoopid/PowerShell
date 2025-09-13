@@ -1,15 +1,5 @@
-# Path to store last update check
-$global:UpdateCheckFile = Join-Path $env:TEMP "LastUpdateCheck.txt"
-
-function ShouldUpdateToday {
-  if (-Not (Test-Path $global:UpdateCheckFile)) { return $true }
-  $LastCheck = Get-Content $global:UpdateCheckFile
-  return ($LastCheck -ne (Get-Date).ToString('yyyy-MM-dd'))
-}
-
-function MarkUpdateChecked {
-  (Get-Date).ToString('yyyy-MM-dd') | Set-Content $global:UpdateCheckFile
-}
+# Initial GitHub.com connectivity check with 1 second timeout
+$global:canConnectToGitHub = Test-Connection github.com -Count 1 -Quiet -TimeoutSeconds 1
 
 function UpdateProfile {
   try {
@@ -22,7 +12,8 @@ function UpdateProfile {
       Copy-Item $TempFile -Destination $PROFILE -Force
       Write-Host "Profile updated. Restart shell to apply changes." -ForegroundColor Magenta
     }
-  } catch { Write-Verbose "Update failed: $_" } finally {
+  }
+  catch { Write-Verbose "Update failed: $_" } finally {
     Remove-Item $TempFile -ErrorAction SilentlyContinue
   }
 }
@@ -34,33 +25,49 @@ function UpdatePowerShell {
     if ($CurrentVersion -lt $LatestVersion) {
       Start-Process powershell.exe -ArgumentList "-NoProfile -Command winget upgrade Microsoft.PowerShell --accept-source-agreements --accept-package-agreements" -NoNewWindow
     }
-  } catch { Write-Verbose "Failed to check PowerShell update: $_" }
+  }
+  catch { Write-Verbose "Failed to check PowerShell update: $_" }
 }
 
 # Run updates in background (non-blocking)
-if (ShouldUpdateToday) {
-  Start-Job {
-    UpdateProfile
-    UpdatePowerShell
-    MarkUpdateChecked
-  } | Out-Null
+if ($global:canConnectToGitHub) {
+  Start-Job -ScriptBlock { UpdateProfile; UpdatePowerShell } | Out-Null
 }
 
-# Lazy import modules
-if (-not (Get-Module -ListAvailable -Name Terminal-Icons)) { Install-Module Terminal-Icons -Scope CurrentUser -Force }
-if (-not (Get-Module -ListAvailable -Name PSFzf)) { Install-Module PSFzf -Scope CurrentUser -Force }
-if (-not (Get-Module -ListAvailable -Name PSReadLine)) { Install-Module PSReadLine -Scope CurrentUser -Force }
 
-Import-Module Terminal-Icons -ErrorAction SilentlyContinue
-Import-Module PSFzf -ErrorAction SilentlyContinue
-Import-Module PSReadLine -ErrorAction SilentlyContinue
+# Import Modules and External Profiles
 
+# Terminal-Icons
+if (-not (Get-Module -ListAvailable -Name Terminal-Icons)) {
+  Install-Module -Name Terminal-Icons -Scope CurrentUser -Force -SkipPublisherCheck
+}
+Import-Module -Name Terminal-Icons
+
+# Chocolatey Profile
+$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+if (Test-Path($ChocolateyProfile)) {
+  Import-Module "$ChocolateyProfile"
+}
+
+# PSFzf
+if (-not (Get-Module -ListAvailable -Name PSFzf)) {
+  Install-Module -Name PSFzf -Scope CurrentUser -Force -SkipPublisherCheck
+}
+Import-Module -Name PSFzf
+
+# PSReadLine
+if (-not (Get-Module -ListAvailable -Name PSReadLine)) {
+  Install-Module -Name PSReadLine -Scope CurrentUser -Force -SkipPublisherCheck
+}
+
+Import-Module -Name PSReadLine
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
 
 $OmpConfig = "$env:TEMP\OneDarkPro.omp.json"
 if (-not (Test-Path $OmpConfig)) {
   Invoke-WebRequest "https://raw.githubusercontent.com/PantiesIsStoopid/PowerShell/refs/heads/main/OneDarkPro.omp.json" -OutFile $OmpConfig
 }
+
 oh-my-posh init pwsh --config $OmpConfig | Invoke-Expression
 
 Set-PSFzfOption -PSReadlineChordProvider "Ctrl+f" -PSReadlineChordReverseHistory "Ctrl+r"
@@ -78,13 +85,11 @@ fastfetch --config "$HOME\Documents\Powershell\FastConfig.jsonc"
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------------
 
-function Touch($File)
-{ 
+function Touch($File) { 
   "" | Out-File $File -Encoding ASCII 
 }
 
-function Time
-{
+function Time {
   param([ScriptBlock]$Script)
   $Start = Get-Date
   & $Script
@@ -93,40 +98,35 @@ function Time
   Write-Host "`n⏱️  Duration: $($Duration.ToString())"
 }
 
-function Ll
-{
+function Ll {
   Get-ChildItem -Path . -Force | Format-Table -AutoSize 
 }
 
-function SpeedTest
-{
+function SpeedTest {
   Write-Host "Running Speedtest" -ForegroundColor Cyan
   Invoke-RestMethod asheroto.com/speedtest | Invoke-Expression
   Write-Host "Pinging 1.1.1.1" -ForegroundColor Cyan
   ping 1.1.1.1
 }
 
-function SystemScan
-{
+function SystemScan {
   Write-Host "Starting DISM scan..." -ForegroundColor Cyan
-  try
-  {
+  try {
     dism /online /cleanup-image /checkhealth
     dism /online /cleanup-image /scanhealth
     dism /online /cleanup-image /restorehealth
     Write-Host "DISM scan completed successfully." -ForegroundColor Green
-  } catch
-  {
+  }
+  catch {
     Write-Host "DISM scan failed: $_" -ForegroundColor Red
   }
 
   Write-Host "Starting SFC scan..." -ForegroundColor Cyan
-  try
-  {
+  try {
     sfc /scannow
     Write-Host "SFC scan completed successfully." -ForegroundColor Green
-  } catch
-  {
+  }
+  catch {
     Write-Host "SFC scan failed: $_" -ForegroundColor Red
   }
 
@@ -135,64 +135,53 @@ function SystemScan
   Write-Host "Restoring permissions completed successfully" -ForegroundColor Green
 }
 
-function Fe
-{
+function Fe {
   Invoke-Item (Get-Location) 
 }
 
-function WinUtil
-{
+function WinUtil {
   Invoke-WebRequest -UseBasicParsing https://christitus.com/win | Invoke-Expression 
 }
 
-function RPassword
-{
+function RPassword {
   param ([Parameter(Mandatory)][int] $Length)
   $CharSet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.ToCharArray()
   $Rng = New-Object System.Security.Cryptography.RNGCryptoServiceProvider
   $Bytes = New-Object byte[]($Length)
   $Rng.GetBytes($Bytes)
   $Result = New-Object char[]($Length)
-  for ($i = 0; $i -lt $Length; $i++)
-  { $Result[$i] = $CharSet[$Bytes[$i] % $CharSet.Length] 
+  for ($i = 0; $i -lt $Length; $i++) {
+    $Result[$i] = $CharSet[$Bytes[$i] % $CharSet.Length] 
   }
   return (-join $Result)
 }
 
-function GL
-{
+function GL {
   git log 
 }
-function GS
-{
+function GS {
   git status 
 }
-function GA
-{
+function GA {
   git add . 
 }
-function GC
-{
+function GC {
   param($m) git commit -m "$m" 
 }
-function GP
-{
+function GP {
   git push 
 }
 
-function GCom
-{
+function GCom {
   git add .; git commit -m "$args" 
 }
 
-function LazyG
-{
+function LazyG {
   git add .; git commit -m "$args"; git push 
 }
 
 #* Help Function
-function ShowHelp
-{
+function ShowHelp {
   @"
 PowerShell Profile Help
 =======================
