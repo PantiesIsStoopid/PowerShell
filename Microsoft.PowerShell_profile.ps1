@@ -31,7 +31,8 @@ function UpdatePowerShell {
 
 # Run updates in background (non-blocking)
 if ($global:canConnectToGitHub) {
-  Start-Job -ScriptBlock { UpdateProfile; UpdatePowerShell } | Out-Null
+  UpdateProfile 
+  UpdatePowerShell 
 }
 
 
