@@ -39,29 +39,11 @@ if ($global:canConnectToGitHub) {
 # Import Modules and External Profiles
 
 # Terminal-Icons
-if (-not (Get-Module -ListAvailable -Name Terminal-Icons)) {
-  Install-Module -Name Terminal-Icons -Scope CurrentUser -Force -SkipPublisherCheck
-}
+
 Import-Module -Name Terminal-Icons
-
-# Chocolatey Profile
-$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
-if (Test-Path($ChocolateyProfile)) {
-  Import-Module "$ChocolateyProfile"
-}
-
-# PSFzf
-if (-not (Get-Module -ListAvailable -Name PSFzf)) {
-  Install-Module -Name PSFzf -Scope CurrentUser -Force -SkipPublisherCheck
-}
 Import-Module -Name PSFzf
-
-# PSReadLine
-if (-not (Get-Module -ListAvailable -Name PSReadLine)) {
-  Install-Module -Name PSReadLine -Scope CurrentUser -Force -SkipPublisherCheck
-}
-
 Import-Module -Name PSReadLine
+
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
 
 $OmpConfig = "$env:TEMP\OneDarkPro.omp.json"
