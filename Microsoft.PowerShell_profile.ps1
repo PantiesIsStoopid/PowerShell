@@ -1,20 +1,3 @@
-# Path to store last update check
-$global:UpdateCheckFile = Join-Path $env:TEMP "LastUpdateCheck.txt"
-
-function ShouldUpdateToday
-{
-  if (-Not (Test-Path $global:UpdateCheckFile))
-  { return $true 
-  }
-  $LastCheck = Get-Content $global:UpdateCheckFile
-  return ($LastCheck -ne (Get-Date).ToString('yyyy-MM-dd'))
-}
-
-function MarkUpdateChecked
-{
-  (Get-Date).ToString('yyyy-MM-dd') | Set-Content $global:UpdateCheckFile
-}
-
 function UpdateProfile
 {
   try
@@ -52,26 +35,8 @@ function UpdatePowerShell
   }
 }
 
-# Run updates in background (non-blocking)
-if (ShouldUpdateToday)
-{
-  Start-Job {
-    UpdateProfile
-    UpdatePowerShell
-    MarkUpdateChecked
-  } | Out-Null
-}
-
-# Lazy import modules
-if (-not (Get-Module -ListAvailable -Name Terminal-Icons))
-{ Install-Module Terminal-Icons -Scope CurrentUser -Force 
-}
-if (-not (Get-Module -ListAvailable -Name PSFzf))
-{ Install-Module PSFzf -Scope CurrentUser -Force 
-}
-if (-not (Get-Module -ListAvailable -Name PSReadLine))
-{ Install-Module PSReadLine -Scope CurrentUser -Force 
-}
+UpdateProfile
+UpdatePowerShell
 
 Import-Module Terminal-Icons -ErrorAction SilentlyContinue
 Import-Module PSFzf -ErrorAction SilentlyContinue
@@ -96,7 +61,6 @@ $ENV:FZF_DEFAULT_OPTS = @"
 --color=border:#5C6370,label:#ABB2BF
 "@
 
-# Keep fastfetch, but don’t clear screen
 fastfetch --config "$HOME\Documents\Powershell\FastConfig.jsonc"
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------------
