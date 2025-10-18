@@ -134,24 +134,23 @@ public class MemClear {
 }
 "@
 
-  # Clear memory of all running processes
+  # Free RAM of all running processes
   Get-Process | ForEach-Object {
     try
-    {
-      [MemClear]::EmptyWorkingSet($_.Handle) | Out-Null
+    { [MemClear]::EmptyWorkingSet($_.Handle) | Out-Null 
     } catch
     {
     }
   }
 
-  # Kill memory-hungry processes
-  $leaky = "RuntimeBroker","SearchApp","YourPhoneApp","Widgets"
-  Get-Process | Where-Object { $leaky -contains $_.Name } | Stop-Process -Force -ErrorAction SilentlyContinue
+  # Stop memory-heavy processes
+  $MemoryHogs = "RuntimeBroker","SearchApp","YourPhoneApp","Widgets"
+  Get-Process | Where-Object { $MemoryHogs -contains $_.Name } | Stop-Process -Force -ErrorAction SilentlyContinue
 
   # Clear Recycle Bin
   Clear-RecycleBin -Force -ErrorAction SilentlyContinue
 
-  Write-Host "RAM cleanup complete."
+  Write-Host "RAM cleared successfully."
 }
 
 function Fe
