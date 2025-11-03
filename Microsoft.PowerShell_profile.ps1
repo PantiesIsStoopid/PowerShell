@@ -38,9 +38,18 @@ function UpdatePowerShell
 UpdateProfile
 UpdatePowerShell
 
-Import-Module Terminal-Icons -ErrorAction SilentlyContinue
-Import-Module PSFzf -ErrorAction SilentlyContinue
-Import-Module PSReadLine -ErrorAction SilentlyContinue
+
+if (-not (Get-Module -ListAvailable -Name Terminal-Icons))
+{
+  Install-Module -Name Terminal-Icons -Scope CurrentUser -Force -SkipPublisherCheck
+}
+Import-Module -Name Terminal-Icons
+
+if (-not (Get-Module -ListAvailable -Name PSReadLine))
+{
+  Install-Module -Name PSReadLine -Scope CurrentUser -Force -SkipPublisherCheck
+}
+Import-Module -Name PSReadLine 
 
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
 
@@ -51,7 +60,16 @@ if (-not (Test-Path $OmpConfig))
 }
 oh-my-posh init pwsh --config $OmpConfig | Invoke-Expression
 
-Set-PSFzfOption -PSReadlineChordProvider "Ctrl+f" -PSReadlineChordReverseHistory "Ctrl+r"
+Set-PSFzfOption -PSReadlineChordReverseHistory "Ctrl+r"
+
+Set-PSReadLineKeyHandler -Chord "Ctrl+f" -ScriptBlock {
+  $file = fzf --preview 'bat --style=numbers --color=always --line-range :500 {}'
+  if ($file)
+  {
+    Set-Location (Split-Path $file)
+    nvim $file  # change 'code' to 'nvim', 'notepad', etc.
+  }
+}
 
 $ENV:FZF_DEFAULT_OPTS = @"
 --color=bg+:#3E4451,bg:#282C34,spinner:#C678DD,hl:#E06C75
@@ -61,8 +79,6 @@ $ENV:FZF_DEFAULT_OPTS = @"
 --color=border:#5C6370,label:#ABB2BF
 "@
 
-fastfetch --config "$HOME\Documents\Powershell\FastConfig.jsonc"
-
 # -------------------------------------------------------------------------------------------------------------------------------------------------------
 
 function Touch($File)
@@ -70,87 +86,10 @@ function Touch($File)
   "" | Out-File $File -Encoding ASCII 
 }
 
-function Time
-{
-  param([ScriptBlock]$Script)
-  $Start = Get-Date
-  & $Script
-  $End = Get-Date
-  $Duration = $End - $Start
-  Write-Host "`n⏱️  Duration: $($Duration.ToString())"
-}
 
 function Ll
 {
   Get-ChildItem -Path . -Force | Format-Table -AutoSize 
-}
-
-function SpeedTest
-{
-  Write-Host "Running Speedtest" -ForegroundColor Cyan
-  Invoke-RestMethod asheroto.com/speedtest | Invoke-Expression
-  Write-Host "Pinging 1.1.1.1" -ForegroundColor Cyan
-  ping 1.1.1.1
-}
-
-function SystemScan
-{
-  Write-Host "Starting DISM scan..." -ForegroundColor Cyan
-  try
-  {
-    dism /online /cleanup-image /checkhealth
-    dism /online /cleanup-image /scanhealth
-    dism /online /cleanup-image /restorehealth
-    Write-Host "DISM scan completed successfully." -ForegroundColor Green
-  } catch
-  {
-    Write-Host "DISM scan failed: $_" -ForegroundColor Red
-  }
-
-  Write-Host "Starting SFC scan..." -ForegroundColor Cyan
-  try
-  {
-    sfc /scannow
-    Write-Host "SFC scan completed successfully." -ForegroundColor Green
-  } catch
-  {
-    Write-Host "SFC scan failed: $_" -ForegroundColor Red
-  }
-
-  Write-Host "Restoring original file permissions" -ForegroundColor Cyan
-  icacls "C:\" /reset /t /c /l
-  Write-Host "Restoring permissions completed successfully" -ForegroundColor Green
-}
-
-function RAM
-{
-  Add-Type @"
-using System;
-using System.Runtime.InteropServices;
-
-public class MemClear {
-    [DllImport("psapi.dll")]
-    public static extern bool EmptyWorkingSet(IntPtr hProcess);
-}
-"@
-
-  # Free RAM of all running processes
-  Get-Process | ForEach-Object {
-    try
-    { [MemClear]::EmptyWorkingSet($_.Handle) | Out-Null 
-    } catch
-    {
-    }
-  }
-
-  # Stop memory-heavy processes
-  $MemoryHogs = "RuntimeBroker","SearchApp","YourPhoneApp","Widgets"
-  Get-Process | Where-Object { $MemoryHogs -contains $_.Name } | Stop-Process -Force -ErrorAction SilentlyContinue
-
-  # Clear Recycle Bin
-  Clear-RecycleBin -Force -ErrorAction SilentlyContinue
-
-  Write-Host "RAM cleared successfully."
 }
 
 function Fe
@@ -161,20 +100,6 @@ function Fe
 function WinUtil
 {
   Invoke-WebRequest -UseBasicParsing https://christitus.com/win | Invoke-Expression 
-}
-
-function RPassword
-{
-  param ([Parameter(Mandatory)][int] $Length)
-  $CharSet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.ToCharArray()
-  $Rng = New-Object System.Security.Cryptography.RNGCryptoServiceProvider
-  $Bytes = New-Object byte[]($Length)
-  $Rng.GetBytes($Bytes)
-  $Result = New-Object char[]($Length)
-  for ($i = 0; $i -lt $Length; $i++)
-  { $Result[$i] = $CharSet[$Bytes[$i] % $CharSet.Length] 
-  }
-  return (-join $Result)
 }
 
 function GL
@@ -219,22 +144,11 @@ Directory Navigation:
 - Touch: Create a file in your current directory (FileName.Ext).
 
 File and System Information:
-- La: Lists all files in the current directory with detailed formatting.
 - Ll: Lists all files, including hidden, in the current directory with detailed formatting.
-- SpeedTest: Runs a speedtest for your internet.
-
-System Maintenance:
-- FlushDNS: Clears the DNS cache.
-- SystemScan: Runs a DISM and SFC scan.
-- Update: Updates all known apps.
-- RAM: Clears up some ram.
 
 Utility Functions:
 - Fe: Opens File Explorer in your current directory.
 - WinUtil: Opens the Chris Titus Tech Windows utility.
-- ReloadProfile: Reloads the terminal profile.
-- Shutdown: Shutdown PC (-Force to force shutdown).
-- RPassword <Length>: Generates a random password of the specified length.
 
 Git Functions:
 - GL: Shortcut for 'git log'.
@@ -245,20 +159,14 @@ Git Functions:
 - G: Changes to the GitHub directory.
 - GCom <message>: Adds all changes and commits with the specified message.
 - LazyG <message>: Adds all changes, commits with the specified message, and pushes to the remote repository.
-- LazyInit <URL>: Adds all steps for initializing a repo and can add a remote URL.
 
-Additional Functions:
-- Grep: Launches an interactive file search using fzf and bat preview. Opens the selected file using the default editor.
 - Touch: Creates a file in the current directory.
 - ShowHelp: Displays this help message.
-- Time <ScriptBlock>: Measures the execution time of a script block.
 
 Keybinds:
 - Ctrl + F: Opens fuzzy finder.
 - Ctrl + R: Fuzzy find through past command history.
 - Ctrl + G: Lets you FZF with preview in your current folder.
-
-CheatSheet: Displays a list of all the most common commands.
 
 Use 'ShowHelp' to display this help message.
 "@
