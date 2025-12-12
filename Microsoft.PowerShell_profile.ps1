@@ -56,6 +56,7 @@ function Update-Profile {
 # ---------------------------------------------------------------------------
 # PowerShell Update Function
 # ---------------------------------------------------------------------------
+
 function Update-PowerShell {
     try {
         Write-Host "Checking for PowerShell updates..." -ForegroundColor Cyan
@@ -81,6 +82,12 @@ function Update-PowerShell {
     catch {
         Write-Error "Failed to update PowerShell: $_"
     }
+}
+
+
+if (canConnectToGitHub) {
+				Update-PowerShell
+				Update-Profile
 }
 
 # ---------------------------------------------------------------------------
