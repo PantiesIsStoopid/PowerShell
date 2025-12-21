@@ -99,7 +99,7 @@ function Update-PowerShell {
 }
 
 
-if (canConnectToGitHub) {
+if ($canConnectToGitHub) {
 				Update-PowerShell
 				Update-Profile
 }
