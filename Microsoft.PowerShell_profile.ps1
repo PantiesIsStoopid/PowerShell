@@ -1,45 +1,7 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-$timeFilePath = [Environment]::GetFolderPath("MyDocuments") + "\PowerShell\LastExecutionTime.txt"
 $repo_root = "https://raw.githubusercontent.com/PantiesIsStoopid"
-
-# Define the update interval in days, set to -1 to always check
-$updateInterval = 7
-
-# Opt-out of telemetry if PowerShell is running as SYSTEM
-if ([bool]([System.Security.Principal.WindowsIdentity]::GetCurrent()).IsSystem) {
-    [System.Environment]::SetEnvironmentVariable(
-        'POWERSHELL_TELEMETRY_OPTOUT',
-        'true',
-        [System.EnvironmentVariableTarget]::Machine
-    )
-}
 
 # Initial GitHub connectivity check with 1 second timeout
 $global:canConnectToGitHub = Test-Connection github.com -Count 1 -Quiet -TimeoutSeconds 1
-
-# Import Modules and External Profiles
-if (-not (Get-Module -ListAvailable -Name Terminal-Icons)) {
-    Install-Module -Name Terminal-Icons -Scope CurrentUser -Force -SkipPublisherCheck
-}
-Import-Module -Name Terminal-Icons
-
-$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
-if (Test-Path $ChocolateyProfile) {
-    Import-Module $ChocolateyProfile
-}
 
 # ---------------------------------------------------------------------------
 # Update Profile Function
@@ -105,21 +67,6 @@ if ($canConnectToGitHub) {
 }
 
 # ---------------------------------------------------------------------------
-# Admin Check & Prompt Customization
-# ---------------------------------------------------------------------------
-$isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(
-    [Security.Principal.WindowsBuiltInRole]::Administrator
-)
-
-function prompt {
-    if ($isAdmin) { "[" + (Get-Location) + "] # " }
-    else          { "[" + (Get-Location) + "] $ " }
-}
-
-$adminSuffix = if ($isAdmin) { " [ADMIN]" } else { "" }
-$Host.UI.RawUI.WindowTitle = "PowerShell {0}$adminSuffix" -f $PSVersionTable.PSVersion.ToString()
-
-# ---------------------------------------------------------------------------
 # Oh-My-Posh Theme
 # ---------------------------------------------------------------------------
 $OmpConfig = "$env:TEMP\OneDarkPro.omp.json"
@@ -151,7 +98,7 @@ $ENV:FZF_DEFAULT_OPTS = @"
 "@
 
 # ---------------------------------------------------------------------------
-# Zoxide 
+# Zoxide
 # ---------------------------------------------------------------------------
 
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
